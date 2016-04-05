@@ -1,0 +1,249 @@
+(function() {
+  var GitCommit, Path, commentchar_config, commitFilePath, commitPane, commitResolution, commitTemplate, currentPane, fs, git, notifier, pathToRepoFile, repo, setupMocks, status, templateFile, textEditor, workspace, _ref;
+
+  fs = require('fs-plus');
+
+  Path = require('flavored-path');
+
+  _ref = require('../fixtures'), repo = _ref.repo, workspace = _ref.workspace, pathToRepoFile = _ref.pathToRepoFile, currentPane = _ref.currentPane, textEditor = _ref.textEditor, commitPane = _ref.commitPane;
+
+  git = require('../../lib/git');
+
+  GitCommit = require('../../lib/models/git-commit');
+
+  notifier = require('../../lib/notifier');
+
+  commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG');
+
+  status = {
+    replace: function() {
+      return status;
+    },
+    trim: function() {
+      return status;
+    }
+  };
+
+  commentchar_config = '';
+
+  templateFile = '';
+
+  commitTemplate = 'foobar';
+
+  commitResolution = Promise.resolve('commit success');
+
+  setupMocks = function() {
+    atom.config.set('git-plus.openInPane', false);
+    spyOn(currentPane, 'activate');
+    spyOn(commitPane, 'destroy').andCallThrough();
+    spyOn(commitPane, 'splitRight');
+    spyOn(atom.workspace, 'getActivePane').andReturn(currentPane);
+    spyOn(atom.workspace, 'open').andReturn(Promise.resolve(textEditor));
+    spyOn(atom.workspace, 'getPanes').andReturn([currentPane, commitPane]);
+    spyOn(atom.workspace, 'paneForURI').andReturn(commitPane);
+    spyOn(status, 'replace').andCallFake(function() {
+      return status;
+    });
+    spyOn(status, 'trim').andCallThrough();
+    spyOn(fs, 'readFileSync').andCallFake(function() {
+      if (fs.readFileSync.mostRecentCall.args[0] === 'template') {
+        return commitTemplate;
+      } else {
+        return '';
+      }
+    });
+    spyOn(fs, 'writeFileSync');
+    spyOn(fs, 'writeFile');
+    spyOn(fs, 'unlink');
+    spyOn(git, 'refresh');
+    spyOn(git, 'getConfig').andCallFake(function() {
+      var arg;
+      arg = git.getConfig.mostRecentCall.args[0];
+      if (arg === 'commit.template') {
+        return Promise.resolve(templateFile);
+      } else if (arg === 'core.commentchar') {
+        return Promise.resolve(commentchar_config);
+      }
+    });
+    spyOn(git, 'cmd').andCallFake(function() {
+      var args;
+      args = git.cmd.mostRecentCall.args[0];
+      if (args[0] === 'status') {
+        return Promise.resolve(status);
+      } else if (args[0] === 'commit') {
+        return commitResolution;
+      } else if (args[0] === 'diff') {
+        return Promise.resolve('diff');
+      }
+    });
+    spyOn(git, 'stagedFiles').andCallFake(function() {
+      var args;
+      args = git.stagedFiles.mostRecentCall.args;
+      if (args[0].getWorkingDirectory() === repo.getWorkingDirectory()) {
+        return Promise.resolve([pathToRepoFile]);
+      }
+    });
+    spyOn(git, 'add').andCallFake(function() {
+      var args;
+      args = git.add.mostRecentCall.args;
+      if (args[0].getWorkingDirectory() === repo.getWorkingDirectory() && args[1].update) {
+        return Promise.resolve(true);
+      }
+    });
+    spyOn(notifier, 'addError');
+    spyOn(notifier, 'addInfo');
+    return spyOn(notifier, 'addSuccess');
+  };
+
+  describe("GitCommit", function() {
+    describe("a regular commit", function() {
+      beforeEach(function() {
+        atom.config.set("git-plus.openInPane", false);
+        commitResolution = Promise.resolve('commit success');
+        setupMocks();
+        return waitsForPromise(function() {
+          return GitCommit(repo);
+        });
+      });
+      it("gets the current pane", function() {
+        return expect(atom.workspace.getActivePane).toHaveBeenCalled();
+      });
+      it("gets the commentchar from configs", function() {
+        return expect(git.getConfig).toHaveBeenCalledWith('core.commentchar', Path.dirname(commitFilePath));
+      });
+      it("gets staged files", function() {
+        return expect(git.cmd).toHaveBeenCalledWith(['status'], {
+          cwd: repo.getWorkingDirectory()
+        });
+      });
+      it("removes lines with '(...)' from status", function() {
+        return expect(status.replace).toHaveBeenCalled();
+      });
+      it("gets the commit template from git configs", function() {
+        return expect(git.getConfig).toHaveBeenCalledWith('commit.template', Path.dirname(commitFilePath));
+      });
+      it("writes to a file", function() {
+        var argsTo_fsWriteFile;
+        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args;
+        return expect(argsTo_fsWriteFile[0]).toEqual(commitFilePath);
+      });
+      it("shows the file", function() {
+        return expect(atom.workspace.open).toHaveBeenCalled();
+      });
+      it("calls git.cmd with ['commit'...] on textEditor save", function() {
+        textEditor.save();
+        return expect(git.cmd).toHaveBeenCalledWith(['commit', '--cleanup=strip', "--file=" + commitFilePath], {
+          cwd: repo.getWorkingDirectory()
+        });
+      });
+      it("closes the commit pane when commit is successful", function() {
+        textEditor.save();
+        waitsFor(function() {
+          return commitPane.destroy.callCount > 0;
+        });
+        return runs(function() {
+          return expect(commitPane.destroy).toHaveBeenCalled();
+        });
+      });
+      it("notifies of success when commit is successful", function() {
+        textEditor.save();
+        waitsFor(function() {
+          return notifier.addSuccess.callCount > 0;
+        });
+        return runs(function() {
+          return expect(notifier.addSuccess).toHaveBeenCalledWith('commit success');
+        });
+      });
+      return it("cancels the commit on textEditor destroy", function() {
+        textEditor.destroy();
+        expect(currentPane.activate).toHaveBeenCalled();
+        return expect(fs.unlink).toHaveBeenCalledWith(commitFilePath);
+      });
+    });
+    describe("when core.commentchar config is not set", function() {
+      return it("uses '#' in commit file", function() {
+        setupMocks();
+        return GitCommit(repo).then(function() {
+          var argsTo_fsWriteFile;
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args;
+          return expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe('#');
+        });
+      });
+    });
+    describe("when core.commentchar config is set to '$'", function() {
+      return it("uses '$' as the commentchar", function() {
+        commentchar_config = '$';
+        setupMocks();
+        return GitCommit(repo).then(function() {
+          var argsTo_fsWriteFile;
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args;
+          return expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe(commentchar_config);
+        });
+      });
+    });
+    describe("when commit.template config is not set", function() {
+      return it("commit file starts with a blank line", function() {
+        setupMocks();
+        return waitsForPromise(function() {
+          return GitCommit(repo).then(function() {
+            var argsTo_fsWriteFile;
+            argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args;
+            return expect(argsTo_fsWriteFile[1].charAt(0)).toEqual("\n");
+          });
+        });
+      });
+    });
+    describe("when commit.template config is set", function() {
+      return it("commit file starts with content of that file", function() {
+        templateFile = 'template';
+        setupMocks();
+        GitCommit(repo);
+        waitsFor(function() {
+          return fs.writeFileSync.callCount > 0;
+        });
+        return runs(function() {
+          var argsTo_fsWriteFile;
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args;
+          return expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe(0);
+        });
+      });
+    });
+    describe("when 'stageChanges' option is true", function() {
+      return it("calls git.add with update option set to true", function() {
+        setupMocks();
+        return GitCommit(repo, {
+          stageChanges: true
+        }).then(function() {
+          return expect(git.add).toHaveBeenCalledWith(repo, {
+            update: true
+          });
+        });
+      });
+    });
+    return describe("a failing commit", function() {
+      beforeEach(function() {
+        atom.config.set("git-plus.openInPane", false);
+        commitResolution = Promise.reject('commit error');
+        setupMocks();
+        return waitsForPromise(function() {
+          return GitCommit(repo);
+        });
+      });
+      return it("notifies of error and doesn't close commit pane", function() {
+        textEditor.save();
+        waitsFor(function() {
+          return notifier.addError.callCount > 0;
+        });
+        return runs(function() {
+          expect(notifier.addError).toHaveBeenCalledWith('commit error');
+          return expect(commitPane.destroy).not.toHaveBeenCalled();
+        });
+      });
+    });
+  });
+
+}).call(this);
+
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAiZmlsZSI6ICIiLAogICJzb3VyY2VSb290IjogIiIsCiAgInNvdXJjZXMiOiBbCiAgICAiL2hvbWUvdGFrYWFraS8uYXRvbS9wYWNrYWdlcy9naXQtcGx1cy9zcGVjL21vZGVscy9naXQtY29tbWl0LXNwZWMuY29mZmVlIgogIF0sCiAgIm5hbWVzIjogW10sCiAgIm1hcHBpbmdzIjogIkFBQUE7QUFBQSxNQUFBLHNOQUFBOztBQUFBLEVBQUEsRUFBQSxHQUFLLE9BQUEsQ0FBUSxTQUFSLENBQUwsQ0FBQTs7QUFBQSxFQUNBLElBQUEsR0FBTyxPQUFBLENBQVEsZUFBUixDQURQLENBQUE7O0FBQUEsRUFHQSxPQU9JLE9BQUEsQ0FBUSxhQUFSLENBUEosRUFDRSxZQUFBLElBREYsRUFFRSxpQkFBQSxTQUZGLEVBR0Usc0JBQUEsY0FIRixFQUlFLG1CQUFBLFdBSkYsRUFLRSxrQkFBQSxVQUxGLEVBTUUsa0JBQUEsVUFURixDQUFBOztBQUFBLEVBV0EsR0FBQSxHQUFNLE9BQUEsQ0FBUSxlQUFSLENBWE4sQ0FBQTs7QUFBQSxFQVlBLFNBQUEsR0FBWSxPQUFBLENBQVEsNkJBQVIsQ0FaWixDQUFBOztBQUFBLEVBYUEsUUFBQSxHQUFXLE9BQUEsQ0FBUSxvQkFBUixDQWJYLENBQUE7O0FBQUEsRUFlQSxjQUFBLEdBQWlCLElBQUksQ0FBQyxJQUFMLENBQVUsSUFBSSxDQUFDLE9BQUwsQ0FBQSxDQUFWLEVBQTBCLGdCQUExQixDQWZqQixDQUFBOztBQUFBLEVBZ0JBLE1BQUEsR0FDRTtBQUFBLElBQUEsT0FBQSxFQUFTLFNBQUEsR0FBQTthQUFHLE9BQUg7SUFBQSxDQUFUO0FBQUEsSUFDQSxJQUFBLEVBQU0sU0FBQSxHQUFBO2FBQUcsT0FBSDtJQUFBLENBRE47R0FqQkYsQ0FBQTs7QUFBQSxFQW1CQSxrQkFBQSxHQUFxQixFQW5CckIsQ0FBQTs7QUFBQSxFQW9CQSxZQUFBLEdBQWUsRUFwQmYsQ0FBQTs7QUFBQSxFQXFCQSxjQUFBLEdBQWlCLFFBckJqQixDQUFBOztB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
+
+//# sourceURL=/home/takaaki/.atom/packages/git-plus/spec/models/git-commit-spec.coffee

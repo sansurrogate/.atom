@@ -1,0 +1,28 @@
+auto-updater is not implemented on this platform
+Error: auto-updater is not implemented on this platform
+    at Object.<anonymous> (/opt/atom/resources/atom.asar/browser/api/lib/auto-updater.js:11:13)
+    at Object.<anonymous> (/opt/atom/resources/atom.asar/browser/api/lib/auto-updater.js:14:4)
+    at Module._compile (module.js:434:26)
+    at Object.defineProperty.value [as .js] (/opt/atom/resources/app.asar/src/compile-cache.js:208:21)
+    at Module.load (module.js:355:32)
+    at Function.Module._load (module.js:310:12)
+    at Module.require (module.js:365:17)
+    at require (module.js:384:17)
+    at AutoUpdateManager.module.exports.AutoUpdateManager.setupAutoUpdater (/opt/atom/resources/app.asar/src/browser/auto-update-manager.js:62:23)
+    at /opt/atom/resources/app.asar/src/browser/auto-update-manager.js:53:24
+    at doNTCallback0 (node.js:419:9)
+    at process._tickCallback (node.js:348:13)
+    at NavigationController.loadUrl (/opt/atom/resources/atom.asar/browser/api/lib/navigation-controller.js:59:24)
+    at EventEmitter.webContents.(anonymous function) [as loadUrl] (/opt/atom/resources/atom.asar/browser/api/lib/web-contents.js:81:27)
+    at BrowserWindow.loadUrl (/opt/atom/resources/atom.asar/browser/api/lib/browser-window.js:121:37)
+    at AtomWindow.module.exports.AtomWindow.setLoadSettings (/opt/atom/resources/app.asar/src/browser/atom-window.js:124:33)
+    at new AtomWindow (/opt/atom/resources/app.asar/src/browser/atom-window.js:110:12)
+    at AtomApplication.module.exports.AtomApplication.openPaths (/opt/atom/resources/app.asar/src/browser/atom-application.js:710:24)
+    at AtomApplication.module.exports.AtomApplication.openWithOptions (/opt/atom/resources/app.asar/src/browser/atom-application.js:131:21)
+    at new AtomApplication (/opt/atom/resources/app.asar/src/browser/atom-application.js:111:14)
+    at createAtomApplication (/opt/atom/resources/app.asar/src/browser/atom-application.js:60:16)
+    at Function.module.exports.AtomApplication.open (/opt/atom/resources/app.asar/src/browser/atom-application.js:63:9)
+    at EventEmitter.<anonymous> (/opt/atom/resources/app.asar/src/browser/main.js:55:23)
+    at emitOne (events.js:82:20)
+    at EventEmitter.emit (events.js:169:7)
+App load time: 427ms

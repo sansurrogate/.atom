@@ -1,0 +1,1 @@
+{".platform-linux":{"ctrl-b":"unset!","ctrl-p":"core:move-up","ctrl-f":"core:move-right","ctrl-g":"core:cancel","ctrl-shift-f":"find-and-replace:show"},"body":{"ctrl-n":"core:move-down","ctrl-shift-N":"application:new-file"}}

@@ -1,0 +1,1 @@
+{".platform-darwin, .platform-win32, .platform-linux":{"ctrl-g":"core:cacel"},".platform-linux":{"ctrl-b":"core:move-left","ctrl-p":"core:move-up","ctrl-f":"core:move-right"},"body":{"ctrl-n":"core:move-down","ctrl-shift-N":"application:new-file"},".platform-win32,.platform-linux":{"ctrl-shift-f":"find-and-replace:show"}}

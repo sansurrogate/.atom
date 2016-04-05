@@ -1,0 +1,38 @@
+@import "ui-variables";
+
+.git-diff-details-outer {
+  background-color: @base-background-color;
+  width: 100%;
+}
+
+.git-diff-details-main-panel {
+  position: relative;
+}
+
+.git-diff-details-button-panel {
+  text-align: right;
+  padding: 2px;
+  width: 100%;
+}
+
+.line {
+  &.git-diff-details-new {
+    background-color: rgba(162, 232, 120, 0.7) !important;
+    color: black !important;
+    span {
+      color: black !important;
+    }
+
+    .invisible-character {
+      opacity: 0;
+    }
+  }
+
+  &.git-diff-details-old {
+    background-color: rgba(232, 120, 120, 0.7) !important;
+    color: black !important;
+    span {
+      color: black !important;
+    }
+  }
+}
