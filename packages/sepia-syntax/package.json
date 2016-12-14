@@ -1,34 +1,60 @@
 {
-  "name": "sepia-syntax",
-  "theme": "syntax",
-  "version": "1.0.5",
+  "_args": [
+    [
+      {
+        "raw": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+        "spec": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+        "type": "local"
+      },
+      "/tmp/takaaki/apm-install-dir-116922-6027-1bnz2j6"
+    ]
+  ],
+  "_from": "../d-116922-6027-xe7eae/package.tgz",
+  "_id": "sepia-syntax@1.0.8",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/sepia-syntax",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+    "spec": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-116922-6027-xe7eae/package.tgz",
+  "_shasum": "b58e2694b2edb18685fe294febebcfde6cea8f62",
+  "_shrinkwrap": null,
+  "_spec": "/tmp/takaaki/d-116922-6027-xe7eae/package.tgz",
+  "_where": "/tmp/takaaki/apm-install-dir-116922-6027-1bnz2j6",
+  "bugs": {
+    "url": "https://github.com/lucaska/sepia-syntax/issues"
+  },
+  "dependencies": {},
   "description": "A light theme with a focus on syntax clarity.",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "homepage": "https://github.com/lucaska/sepia-syntax#readme",
+  "license": "MIT",
+  "name": "sepia-syntax",
+  "optionalDependencies": {},
+  "readme": "#### Sepia is lightweight syntax theme for the Atom editor, based on a few guiding principles:\n\n- Working synergistically with Atom's new One Light and One Dark Themes\n- Being pleasurable to look at for extended periods of time (I want you to like to work in it!)\n- Syntax is contrasted enough to allow you to differentiate things a glance, without them stepping on each other, or blending together.\n- Light, parchment style editor background for people who have glossy monitors or don't work in a dungeon all day.\n\nIf you use OSX, I suggest the Monaco font, which is not only free, but looks really great with this theme. YMMV\n\nIf you like the theme, please :star: it, or send pull requests if you think you can improve it!\n\n![Sepia screenshot dark](https://dl.dropboxusercontent.com/u/57252/dark.png)\n\n![Sepia screenshot light](https://dl.dropboxusercontent.com/u/57252/light.png)\n",
+  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lucaska/sepia-syntax.git"
   },
-  "license": "MIT",
-  "engines": {
-    "atom": ">0.50.0"
-  },
-  "readme": "#### Sepia is lightweight syntax theme for the Atom editor, based on a few guiding principles:\n\n- Working synergistically with Atom's new One Light and One Dark Themes\n- Being pleasurable to look at for extended periods of time (I want you to like to work in it!)\n- Syntax is contrasted enough to allow you to differentiate things a glance, without them stepping on each other, or blending together.\n- Light, parchment style editor background for people who have glossy monitors or don't work in a dungeon all day.\n\nIf you use OSX, I suggest the Monaco font, which is not only free, but looks really great with this theme. YMMV\n\nIf you like the theme, please :star: it, or send pull requests if you think you can improve it!\n\n![Sepia screenshot dark](https://dl.dropboxusercontent.com/u/57252/Screenshot%202015-02-23%2017.51.29.png)\n\n![Sepia screenshot light](https://dl.dropboxusercontent.com/u/57252/Screenshot%202015-02-23%2017.51.04.png)\n",
-  "readmeFilename": "README.md",
-  "bugs": {
-    "url": "https://github.com/lucaska/sepia-syntax/issues"
-  },
-  "homepage": "https://github.com/lucaska/sepia-syntax#readme",
-  "_id": "sepia-syntax@1.0.5",
-  "_shasum": "d6e5eb2f722ac30225f39c33908cda7a51c97a88",
-  "_resolved": "file:../d-116230-14164-tx0d7e/package.tgz",
-  "_from": "../d-116230-14164-tx0d7e/package.tgz",
-  "_atomModuleCache": {
-    "version": 1,
-    "dependencies": [],
-    "extensions": {
-      ".json": [
-        "package.json"
-      ]
-    },
-    "folders": []
-  }
+  "theme": "syntax",
+  "version": "1.0.8"
 }

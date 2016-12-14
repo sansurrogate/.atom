@@ -67,7 +67,9 @@ parseDiff = (data) -> q.fcall ->
 parseStatus = (data) -> q.fcall ->
   files = []
   for line in data.split('\n') when line.length
-    [type, name] = line.replace(/\ \ /g, ' ').trim().split(' ')
+    # [type, name] = line.replace(/\ \ /g, ' ').trim().split(' ')
+    type = line.substring(0, 2)
+    name = line.substring(2).trim().replace(new RegExp('\"', 'g'), '')
     files.push
       name: name
       selected: switch type[type.length - 1]
@@ -99,7 +101,7 @@ callGit = (cmd, parser, nodatalog) ->
       logcb e.stdout, true
       logcb e.message, true
       return
-      
+
 module.exports =
   isInitialised: ->
     return cwd
@@ -151,7 +153,7 @@ module.exports =
     message = message or Date.now()
     message = message.replace(/"/g, '\\"')
 
-    return callGit "commit -m \"#{message}\"", (data) ->
+    return callGit "commit --allow-empty-message -m \"#{message}\"", (data) ->
       atomRefresh()
       return parseDefault(data)
 
@@ -188,6 +190,11 @@ module.exports =
       atomRefresh()
       return parseDefault(data)
 
+  ptag: (remote) ->
+    return callGit "push #{remote} --tags", (data) ->
+      atomRefresh()
+      return parseDefault(data)
+
   pullup: ->
     return callGit "pull upstream $(git branch | grep '^\*' | sed -n 's/\*[ ]*//p')", (data) ->
       atomRefresh()
@@ -203,14 +210,34 @@ module.exports =
       atomRefresh()
       return parseDefault(data)
 
-  push: (remote,branch)->
-    cmd = "-c push.default=simple push #{remote} #{branch} --porcelain"
+  push: (remote,branch,force)->
+    forced = if force then "-f" else ""
+    cmd = "-c push.default=simple push #{remote} #{branch} #{forced} --porcelain"
     return callGit cmd, (data) ->
       atomRefresh()
       return parseDefault(data)
 
   log: (branch) ->
     return callGit "log origin/#{repo.getUpstreamBranch() or 'master'}..#{branch}", parseDefault
+
+  rebase: (branch) ->
+    return callGit "rebase #{branch}", (data) ->
+      atomRefresh()
+      return parseDefault(data)
+
+  midrebase: (contin,abort,skip) ->
+    if contin
+      return callGit "rebase --continue", (data) ->
+        atomRefresh()
+        return parseDefault(data)
+    else if abort
+      return callGit "rebase --abort", (data) ->
+        atomRefresh()
+        return parseDefault(data)
+    else if skip
+      return callGit "rebase --skip", (data) ->
+        atomRefresh()
+        return parseDefault(data)
 
   reset: (files) ->
     return callGit "checkout -- #{files.join(' ')}", (data) ->
@@ -225,3 +252,8 @@ module.exports =
 
   status: ->
     return callGit 'status --porcelain --untracked-files=all', parseStatus
+
+  tag: (name,href,msg) ->
+    return callGit "tag -a #{name} -m '#{msg}' #{href}", (data) ->
+      atomRefresh()
+      return parseDefault(data)

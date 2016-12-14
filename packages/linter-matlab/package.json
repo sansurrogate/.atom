@@ -1,0 +1,52 @@
+{
+  "name": "linter-matlab",
+  "main": "./lib/linter-matlab",
+  "version": "1.1.0",
+  "description": "Linter plugin for MATLAB, using mlint",
+  "keywords": [
+    "matlab",
+    "lint",
+    "linter",
+    "mlint"
+  ],
+  "activationCommands": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajdm/linter-matlab.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {},
+  "providedServices": {
+    "linter": {
+      "versions": {
+        "1.0.0": "provideLinter"
+      }
+    }
+  },
+  "readme": "# linter-matlab package\n\nThis Atom package provides a [Linter](https://atom.io/packages/linter) for MATLAB's `mlint` utility.\n\n## Installation\n\n1. Install the Linter package, following the instructions on [this page](https://atom.io/packages/linter).\n2. `apm install linter-matlab`\n3. If `mlint` is not already in your PATH, you will need to set the `mlintDir` setting to point to the directory containing `mlint`. As noticed by [@hyiltiz](https://github.com/hyiltiz), this currently does not work with symbolic links.\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/ajdm/linter-matlab/issues"
+  },
+  "homepage": "https://github.com/ajdm/linter-matlab#readme",
+  "_id": "linter-matlab@1.1.0",
+  "_shasum": "324f7a0e1e77ce0799cc449d96907a1f955c8f83",
+  "_resolved": "file:../d-11682-14727-li7d58/package.tgz",
+  "_from": "../d-11682-14727-li7d58/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".coffee": [
+        "lib/linter-matlab.coffee"
+      ],
+      ".json": [
+        "package.json"
+      ]
+    },
+    "folders": []
+  }
+}

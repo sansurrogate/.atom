@@ -1,0 +1,150 @@
+(function() {
+  var CiteView, CompositeDisposable, LabelView, LatexerHook;
+
+  CompositeDisposable = require('atom').CompositeDisposable;
+
+  LabelView = require('./label-view');
+
+  CiteView = require('./cite-view');
+
+  module.exports = LatexerHook = (function() {
+    LatexerHook.prototype.beginRex = /\\begin{([^}]+)}/;
+
+    LatexerHook.prototype.mathRex = /(\\+)\[/;
+
+    LatexerHook.prototype.refRex = /\\\w*ref({|{[^}]+,)$/;
+
+    LatexerHook.prototype.citeRex = /\\(cite|textcite|onlinecite|citet|citep|citet\*|citep\*)(\[[^\]]+\])?({|{[^}]+,)$/;
+
+    function LatexerHook(editor) {
+      this.editor = editor;
+      this.disposables = new CompositeDisposable;
+      this.disposables.add(this.editor.onDidChangeTitle((function(_this) {
+        return function() {
+          return _this.subscribeBuffer();
+        };
+      })(this)));
+      this.disposables.add(this.editor.onDidChangePath((function(_this) {
+        return function() {
+          return _this.subscribeBuffer();
+        };
+      })(this)));
+      this.disposables.add(this.editor.onDidSave((function(_this) {
+        return function() {
+          return _this.subscribeBuffer();
+        };
+      })(this)));
+      this.disposables.add(this.editor.onDidDestroy(this.destroy.bind(this)));
+      this.subscribeBuffer();
+      this.lv = new LabelView;
+      this.cv = new CiteView;
+    }
+
+    LatexerHook.prototype.destroy = function() {
+      var _ref, _ref1;
+      this.unsubscribeBuffer();
+      this.disposables.dispose();
+      if ((_ref = this.lv) != null) {
+        _ref.hide();
+      }
+      return (_ref1 = this.cv) != null ? _ref1.hide() : void 0;
+    };
+
+    LatexerHook.prototype.subscribeBuffer = function() {
+      var title, _ref;
+      this.unsubscribeBuffer();
+      if (this.editor == null) {
+        return;
+      }
+      title = (_ref = this.editor) != null ? _ref.getTitle() : void 0;
+      if (!((title != null) && title.match(/\.tex$/))) {
+        return;
+      }
+      this.buffer = this.editor.getBuffer();
+      return this.disposableBuffer = this.buffer.onDidStopChanging((function(_this) {
+        return function() {
+          return _this.editorHook();
+        };
+      })(this));
+    };
+
+    LatexerHook.prototype.unsubscribeBuffer = function() {
+      var _ref;
+      if ((_ref = this.disposableBuffer) != null) {
+        _ref.dispose();
+      }
+      return this.buffer = null;
+    };
+
+    LatexerHook.prototype.refCiteCheck = function(editor, refOpt, citeOpt) {
+      var line, match, pos;
+      pos = editor.getCursorBufferPosition().toArray();
+      line = editor.getTextInBufferRange([[pos[0], 0], pos]);
+      if (refOpt && (match = line.match(this.refRex))) {
+        this.lv.show(editor);
+      }
+      if (citeOpt && (match = line.match(this.citeRex))) {
+        return this.cv.show(editor);
+      }
+    };
+
+    LatexerHook.prototype.environmentCheck = function(editor) {
+      var balanceAfter, balanceBefore, beginText, beginTextRex, endText, endTextRex, lineCount, match, pos, posBefore, preText, previousLine, remainingText;
+      pos = editor.getCursorBufferPosition().toArray();
+      if (pos[0] <= 0) {
+        return;
+      }
+      previousLine = editor.lineTextForBufferRow(pos[0] - 1);
+      if ((match = this.beginRex.exec(previousLine))) {
+        beginText = "\\begin{" + match[1] + "}";
+        endText = "\\end{" + match[1] + "}";
+        beginTextRex = new RegExp(beginText.replace(/([()[{*+.$^\\|?])/g, "\\$1"), "gm");
+        endTextRex = new RegExp(endText.replace(/([()[{*+.$^\\|?])/g, "\\$1"), "gm");
+      } else if ((match = this.mathRex.exec(previousLine)) && match[1].length % 2) {
+        beginText = "\\[";
+        endText = "\\]";
+        beginTextRex = new RegExp("\\\\\\[", "gm");
+        endTextRex = new RegExp("\\\\\\]", "gm");
+      } else {
+        return;
+      }
+      lineCount = editor.getLineCount();
+      preText = editor.getTextInBufferRange([[0, 0], [pos[0], 0]]).replace(/%.+$/gm, "");
+      remainingText = editor.getTextInBufferRange([[pos[0], 0], [lineCount + 1, 0]]).replace(/%.+$/gm, "");
+      balanceBefore = (preText.match(beginTextRex) || []).length - (preText.match(endTextRex) || []).length;
+      balanceAfter = (remainingText.match(beginTextRex) || []).length - (remainingText.match(endTextRex) || []).length;
+      if (balanceBefore + balanceAfter < 1) {
+        return;
+      }
+      posBefore = editor.getCursorBufferPosition();
+      editor.insertText(endText);
+      editor.moveUp(1);
+      editor.moveToEndOfLine();
+      return editor.insertText("\n");
+    };
+
+    LatexerHook.prototype.editorHook = function(editor) {
+      var citeOpt, envOpt, refOpt;
+      if (editor == null) {
+        editor = this.editor;
+      }
+      envOpt = atom.config.get("latexer.autocomplete_environments");
+      refOpt = atom.config.get("latexer.autocomplete_references");
+      citeOpt = atom.config.get("latexer.autocomplete_citations");
+      if (refOpt || citeOpt) {
+        this.refCiteCheck(editor, refOpt, citeOpt);
+      }
+      if (envOpt) {
+        return this.environmentCheck(editor);
+      }
+    };
+
+    return LatexerHook;
+
+  })();
+
+}).call(this);
+
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAiZmlsZSI6ICIiLAogICJzb3VyY2VSb290IjogIiIsCiAgInNvdXJjZXMiOiBbCiAgICAiL2hvbWUvdGFrYWFraS8uYXRvbS9wYWNrYWdlcy9sYXRleGVyL2xpYi9sYXRleGVyLWhvb2suY29mZmVlIgogIF0sCiAgIm5hbWVzIjogW10sCiAgIm1hcHBpbmdzIjogIkFBQUE7QUFBQSxNQUFBLHFEQUFBOztBQUFBLEVBQUMsc0JBQXVCLE9BQUEsQ0FBUSxNQUFSLEVBQXZCLG1CQUFELENBQUE7O0FBQUEsRUFDQSxTQUFBLEdBQVksT0FBQSxDQUFRLGNBQVIsQ0FEWixDQUFBOztBQUFBLEVBRUEsUUFBQSxHQUFXLE9BQUEsQ0FBUSxhQUFSLENBRlgsQ0FBQTs7QUFBQSxFQUlBLE1BQU0sQ0FBQyxPQUFQLEdBQ1E7QUFDSiwwQkFBQSxRQUFBLEdBQVUsa0JBQVYsQ0FBQTs7QUFBQSwwQkFDQSxPQUFBLEdBQVMsU0FEVCxDQUFBOztBQUFBLDBCQUVBLE1BQUEsR0FBUSxzQkFGUixDQUFBOztBQUFBLDBCQUdBLE9BQUEsR0FBUyxtRkFIVCxDQUFBOztBQUlhLElBQUEscUJBQUUsTUFBRixHQUFBO0FBQ1gsTUFEWSxJQUFDLENBQUEsU0FBQSxNQUNiLENBQUE7QUFBQSxNQUFBLElBQUMsQ0FBQSxXQUFELEdBQWUsR0FBQSxDQUFBLG1CQUFmLENBQUE7QUFBQSxNQUNBLElBQUMsQ0FBQSxXQUFXLENBQUMsR0FBYixDQUFpQixJQUFDLENBQUEsTUFBTSxDQUFDLGdCQUFSLENBQXlCLENBQUEsU0FBQSxLQUFBLEdBQUE7ZUFBQSxTQUFBLEdBQUE7aUJBQUcsS0FBQyxDQUFBLGVBQUQsQ0FBQSxFQUFIO1FBQUEsRUFBQTtNQUFBLENBQUEsQ0FBQSxDQUFBLElBQUEsQ0FBekIsQ0FBakIsQ0FEQSxDQUFBO0FBQUEsTUFFQSxJQUFDLENBQUEsV0FBVyxDQUFDLEdBQWIsQ0FBaUIsSUFBQyxDQUFBLE1BQU0sQ0FBQyxlQUFSLENBQXdCLENBQUEsU0FBQSxLQUFBLEdBQUE7ZUFBQSxT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
+
+//# sourceURL=/home/takaaki/.atom/packages/latexer/lib/latexer-hook.coffee

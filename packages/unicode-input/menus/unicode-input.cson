@@ -1,0 +1,21 @@
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Unicode Input'
+      'command': 'unicode-input:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Unicode Input'
+      'submenu': [
+        {
+          'label': 'Toggle'
+          'command': 'unicode-input:toggle'
+        }
+      ]
+    ]
+  }
+]

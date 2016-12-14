@@ -1,0 +1,26 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+        "impliedStrict": true
+    }
+  },
+  "globals": {
+  },
+
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+     "no-console": "warn",
+     "curly": "warn",
+     "guard-for-in": "warn",
+     "no-else-return": "warn",
+     "comma-style": ["error", "last"],
+     "comma-spacing": ["error", {"before": false, "after": true}],
+     "no-var": "error",
+     "no-unused-vars": ["warn", {"args": "none"}]
+  }
+}

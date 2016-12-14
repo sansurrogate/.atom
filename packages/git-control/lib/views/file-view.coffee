@@ -28,7 +28,7 @@ class FileView extends View
         @span click: 'toggleBranch', 'Workspace:'
         @span '', outlet: 'workspaceTitle'
         @div class: 'action', click: 'selectAll', =>
-          @span 'Select'
+          @span 'Select all'
           @i class: 'icon check'
           @input class: 'invisible', type: 'checkbox', outlet: 'allCheckbox', checked: true
       @div class: 'placeholder', 'No local working copy changes detected'
@@ -54,10 +54,10 @@ class FileView extends View
       rem: []
 
     for name, file of @files when file.selected
-      files.all.push name
+      files.all.push file.name
       switch file.type
-        when 'deleted' then files.rem.push name
-        else files.add.push name
+        when 'deleted' then files.rem.push file.name
+        else files.add.push file.name
 
     return files
 
@@ -103,7 +103,10 @@ class FileView extends View
         file.select = select
         file.showFileDiff = showFileDiff
 
-        @files[file.name] or= name: file.name
+        tempName = file.name
+        if tempName.indexOf(' ') > 0 then tempName = '\"' + tempName + '\"'
+
+        @files[file.name] or= name: tempName
         @files[file.name].type = file.type
         @files[file.name].selected = file.selected
         @append new FileItem(file)

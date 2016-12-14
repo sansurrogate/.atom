@@ -10,6 +10,18 @@ module.exports = {
     }
     return array;
   },
+  walkSync: function(dir, filelist) {
+    var fs = fs || require('fs'),
+    files = fs.readdirSync(dir);
+    filelist = filelist || [];
+    files.forEach(function(file) {
+      if (fs.statSync(dir + '/' + file).isDirectory()) {
+        filelist.push(dir + '/' + file)
+        filelist = module.exports.walkSync(dir + '/' + file, filelist);
+      }
+    });
+    return filelist;
+  },
   grammarType(grammar_name) {
     if (grammar_name == "C"){
       return "C";
@@ -38,10 +50,29 @@ module.exports = {
         }
       }
     }
-    return cwd;
+    if (cwd) {
+      return cwd
+    } else {
+      return ""
+    }
+  },
+  getFileDir: function() {
+    var filedir;
+    editor = atom.workspace.getActivePaneItem();
+    if (editor) {
+      temp_file = editor.buffer.file;
+      if (temp_file) {
+        filedir = temp_file.getParent().getPath();
+      }
+    }
+    return filedir;
   },
   splitStringTrim: function(str, delim, expandPaths, itemPrefix){
+    var pathm = require("path");
     output = [];
+    if (!str) {
+      return output;
+    }
     str = str.trim();
     if (str.length == 0){
       return output;
@@ -51,7 +82,21 @@ module.exports = {
       item = item.trim();
       if (item.length > 0){
         if (item.substring(0, 1) == "." && expandPaths) {
-          item = require("path").join(cwd, item);
+          item = pathm.join(cwd, item);
+        }
+        else if (item.substring(0, 1) == "-" && expandPaths) {
+          item = item.substring(1, item.length);
+          item = pathm.join(module.exports.getFileDir(), item);
+        }
+        if (item.substring(item.length-2, item.length) == '/*' && expandPaths) {
+          item = item.substring(0, item.length-2)
+          var list = []
+          dir_list = module.exports.walkSync(item, list)
+          console.log("Expanding directories")
+          dir_list.forEach(function(item){
+            item = itemPrefix + item
+            output.push(item)
+          })
         }
         item = itemPrefix + item;
         output.push(item)
@@ -100,7 +145,9 @@ module.exports = {
     var flag_array = module.exports.splitStringTrim(flags, " ", false, "");
     args = args.concat(flag_array);
 
-    args.push(`-fmax-errors=${settings.gccErrorLimit}`);
+    if (settings.gccErrorLimit >= 0) {
+      args.push(`-fmax-errors=${settings.gccErrorLimit}`);
+    }
     if (settings.gccSuppressWarnings) {
       args.push("-w");
     }

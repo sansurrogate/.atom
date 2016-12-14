@@ -1,0 +1,35 @@
+(function() {
+  var OutputViewManager, git, notifier;
+
+  git = require('../git');
+
+  notifier = require('../notifier');
+
+  OutputViewManager = require('../output-view-manager');
+
+  module.exports = function(repo, _arg) {
+    var args, cwd, message;
+    message = (_arg != null ? _arg : {}).message;
+    cwd = repo.getWorkingDirectory();
+    args = ['stash', 'save'];
+    if (message) {
+      args.push(message);
+    }
+    return git.cmd(args, {
+      cwd: cwd
+    }, {
+      color: true
+    }).then(function(msg) {
+      if (msg !== '') {
+        return OutputViewManager.create().setContent(msg).finish();
+      }
+    })["catch"](function(msg) {
+      return notifier.addInfo(msg);
+    });
+  };
+
+}).call(this);
+
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAiZmlsZSI6ICIiLAogICJzb3VyY2VSb290IjogIiIsCiAgInNvdXJjZXMiOiBbCiAgICAiL2hvbWUvdGFrYWFraS8uYXRvbS9wYWNrYWdlcy9naXQtcGx1cy9saWIvbW9kZWxzL2dpdC1zdGFzaC1zYXZlLmNvZmZlZSIKICBdLAogICJuYW1lcyI6IFtdLAogICJtYXBwaW5ncyI6ICJBQUFBO0FBQUEsTUFBQSxnQ0FBQTs7QUFBQSxFQUFBLEdBQUEsR0FBTSxPQUFBLENBQVEsUUFBUixDQUFOLENBQUE7O0FBQUEsRUFDQSxRQUFBLEdBQVcsT0FBQSxDQUFRLGFBQVIsQ0FEWCxDQUFBOztBQUFBLEVBRUEsaUJBQUEsR0FBb0IsT0FBQSxDQUFRLHdCQUFSLENBRnBCLENBQUE7O0FBQUEsRUFJQSxNQUFNLENBQUMsT0FBUCxHQUFpQixTQUFDLElBQUQsRUFBTyxJQUFQLEdBQUE7QUFDZixRQUFBLGtCQUFBO0FBQUEsSUFEdUIsMEJBQUQsT0FBVSxJQUFULE9BQ3ZCLENBQUE7QUFBQSxJQUFBLEdBQUEsR0FBTSxJQUFJLENBQUMsbUJBQUwsQ0FBQSxDQUFOLENBQUE7QUFBQSxJQUNBLElBQUEsR0FBTyxDQUFDLE9BQUQsRUFBVSxNQUFWLENBRFAsQ0FBQTtBQUVBLElBQUEsSUFBc0IsT0FBdEI7QUFBQSxNQUFBLElBQUksQ0FBQyxJQUFMLENBQVUsT0FBVixDQUFBLENBQUE7S0FGQTtXQUdBLEdBQUcsQ0FBQyxHQUFKLENBQVEsSUFBUixFQUFjO0FBQUEsTUFBQyxLQUFBLEdBQUQ7S0FBZCxFQUFxQjtBQUFBLE1BQUEsS0FBQSxFQUFPLElBQVA7S0FBckIsQ0FDQSxDQUFDLElBREQsQ0FDTSxTQUFDLEdBQUQsR0FBQTtBQUNKLE1BQUEsSUFBdUQsR0FBQSxLQUFTLEVBQWhFO2VBQUEsaUJBQWlCLENBQUMsTUFBbEIsQ0FBQSxDQUEwQixDQUFDLFVBQTNCLENBQXNDLEdBQXRDLENBQTBDLENBQUMsTUFBM0MsQ0FBQSxFQUFBO09BREk7SUFBQSxDQUROLENBR0EsQ0FBQyxPQUFELENBSEEsQ0FHTyxTQUFDLEdBQUQsR0FBQTthQUNMLFFBQVEsQ0FBQyxPQUFULENBQWlCLEdBQWpCLEVBREs7SUFBQSxDQUhQLEVBSmU7RUFBQSxDQUpqQixDQUFBO0FBQUEiCn0=
+
+//# sourceURL=/home/takaaki/.atom/packages/git-plus/lib/models/git-stash-save.coffee

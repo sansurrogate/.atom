@@ -101,6 +101,14 @@ The opacity used to render the line text in the Minimap. `(default=0.6)`
 ---|---
 ![](https://github.com/atom-minimap/minimap/blob/master/resources/text-opacity-default.png?raw=true)|![](https://github.com/atom-minimap/minimap/blob/master/resources/text-opacity-1.png?raw=true)
 
+#### Ignore Whitespaces In Tokens
+
+When enabled, text editor tokens are rendered as plain blocks, with no regards to the whitespaces they contains. `(default=false)`
+
+`false`|`true`
+---|---
+![](https://github.com/atom-minimap/minimap/blob/master/resources/with-whitespaces.png?raw=true)|![](https://github.com/atom-minimap/minimap/blob/master/resources/without-whitespaces.png?raw=true)
+
 ### Display Plugins Controls
 
 If checked, the Minimap plugins can be activated/deactivated from the Minimap settings view and a quick settings dropdown will be available on the top right corner of the Minimap. `(default=true)`
@@ -159,15 +167,29 @@ The scrolling speed when the `Independent Minimap Scroll On Mouse Wheel Events` 
 
 If checked the Minimap scroll is done using a `translate3d` transform, otherwise the `translate` transform is used. `(default=true)`
 
+#### Adjust Minimap Width To Soft Wrap
+
+If this option is enabled and Soft Wrap is checked then the Minimap max width is set to the Preferred Line Length value. `(default=true)`
+
+#### Adjust Minimap Width Only When Smaller
+
+If this option and `adjustMinimapWidthToSoftWrap` are enabled the minimap width will never go past the limit sets by CSS. On the other hand, when disabled the minimap will expand to honor the preferred line width. `(default=true)`
+
 #### Absolute Mode
 
-When enabled the Minimap uses an absolute positioning, letting the editor's content flow below the Minimap. `(default=true)`
+When enabled the Minimap uses an absolute positioning, letting the editor's content flow below the Minimap. `(default=false)`
 
 Note that this setting will do nothing if `Display Minimap On Left` is also enabled.
 
 `false`|`true`
 ---|---
 ![](https://github.com/atom-minimap/minimap/blob/master/resources/normal-mode.png?raw=true)|![](https://github.com/atom-minimap/minimap/blob/master/resources/absolute-mode.png?raw=true)
+
+#### Adjust Absolute Mode Height
+
+When enabled and `Absolute Mode` is also enabled, the minimap height will be adjusted to only take the space required by the text editor content, leaving the space below triggering mouse events on the text editor. `(default=false)`
+
+**Be aware this can have some impact on performances as the minimap canvases will be resized every time a change in the editor make its height change.**
 
 ### Key Bindings
 
@@ -188,8 +210,8 @@ The Minimap package doesn't provide any default keybindings. But you can define 
 If you want to hide the default editor scrollbar, edit your `style.less` (Open Your Stylesheet) and use the following snippet:
 
 ```css
-atom-text-editor .vertical-scrollbar,
-atom-text-editor::shadow .vertical-scrollbar {
+atom-text-editor[with-minimap] .vertical-scrollbar,
+atom-text-editor[with-minimap]::shadow .vertical-scrollbar {
   opacity: 0;
   width: 0;
 }
@@ -211,10 +233,9 @@ atom-text-editor::shadow atom-text-editor-minimap {
 ![minimap-custom-background](https://github.com/atom-minimap/minimap/blob/master/resources/minimap-custom-visible-area.png?raw=true)
 
 ```css
-atom-text-editor atom-text-editor-minimap::shadow .minimap-visible-area,
-atom-text-editor::shadow atom-text-editor-minimap::shadow .minimap-visible-area {
-  background-color: green;
-  opacity: .5;
+atom-text-editor atom-text-editor-minimap::shadow .minimap-visible-area::after,
+atom-text-editor::shadow atom-text-editor-minimap::shadow .minimap-visible-area::after {
+  background-color: rgba(0, 255, 0, 0.5);
 }
 ```
 
@@ -226,6 +247,18 @@ atom-text-editor::shadow atom-text-editor-minimap::shadow .minimap-visible-area 
 atom-text-editor atom-text-editor-minimap::shadow .minimap-scroll-indicator,
 atom-text-editor::shadow atom-text-editor-minimap::shadow .minimap-scroll-indicator {
   background-color: green;
+}
+```
+
+#### Adding an opaque background to the minimap in absolute mode with adjusted height
+
+With both `absoluteMode` and `adjustAbsoluteModeHeight` settings are enabled, the canvases in the minimap won't necessarily takes the whole editor's height.
+
+```css
+atom-text-editor::shadow, atom-text-editor, html {
+  atom-text-editor-minimap::shadow canvas:first-child {
+    background: @syntax-background-color;
+  }
 }
 ```
 
@@ -268,6 +301,58 @@ atom-text-editor {
   }
 }
 ```
+
+#### Make Minimap Visible area display like Sublime Text 
+
+Put the following code in your user stylesheet to make your minimap look like Sublime text.
+It's more easy to view when you have code hightlight in minimap.
+
+`Default State (Hidden)`|`Hover`|`Only display Visible area when hover or click/drag event.`
+---|---|:---:
+![](https://github.com/machinavn/minimap/blob/master/resources/on-default-minimap.png?raw=true)|![](https://github.com/machinavn/minimap/blob/master/resources/on-hover-minimap.png?raw=true)|![](https://github.com/machinavn/minimap/blob/master/resources/on-scroll-minimap.png?raw=true)
+
+```css
+atom-text-editor,
+atom-text-editor::shadow,
+html {
+    atom-text-editor-minimap {
+        &::shadow {
+            .minimap-visible-area {
+                background-color: #7c7c7c;
+                // Color of Visible area.
+                opacity: 0;
+                // Default 0 when you not working with minimap
+                cursor: default;
+                // Change cursor style to pointer.
+                transition: 0.5s opacity;
+                // Better UI.
+                &:hover {
+                    opacity: 0.2;
+                } // Only display Minimap visible area when working.
+                &:active {
+                    cursor: default;
+                } // Change cursor when dragging.
+            }
+        }
+        &:hover::shadow {
+            .minimap-visible-area {
+                opacity: 0.2;
+                transition: opacity 1s;
+            } // When Hover to all minimap area, visible area will display. 
+        }
+        
+        &:active::shadow {
+            .minimap-visible-area {
+                opacity: 0.2;
+                transition: opacity 0.5s;
+            } // Display Minimap visible area when dragging.
+        }
+    }
+}
+
+```
+
+
 
 ### ASCII Art Comments
 

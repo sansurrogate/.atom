@@ -1,0 +1,65 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+        "spec": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+        "type": "local"
+      },
+      "/tmp/takaaki/apm-install-dir-11698-23281-q131oj"
+    ]
+  ],
+  "_from": "../d-11698-23281-1x2yw20/package.tgz",
+  "_id": "language-arm@1.2.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/language-arm",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+    "spec": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-11698-23281-1x2yw20/package.tgz",
+  "_shasum": "0f1b2347d1d485fbc48380b71eedaa283d1f403d",
+  "_shrinkwrap": null,
+  "_spec": "/tmp/takaaki/d-11698-23281-1x2yw20/package.tgz",
+  "_where": "/tmp/takaaki/apm-install-dir-11698-23281-q131oj",
+  "bugs": {
+    "url": "https://github.com/dan-c-underwood/language-arm/issues"
+  },
+  "dependencies": {},
+  "description": "Syntax highlighting for ARM Assembly",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "homepage": "https://github.com/dan-c-underwood/language-arm#readme",
+  "keywords": [
+    "grammar",
+    "assembly",
+    "arm",
+    "language"
+  ],
+  "license": "MIT",
+  "name": "language-arm",
+  "optionalDependencies": {},
+  "readme": "# ARM assembly highlighting for Atom\n\nAdds syntax highlighting for the ARM Assembly language to Atom. This package was originally written to support the ARM instruction set used in teaching at the University of Manchester so some instructions may not be available on all platforms.\n\n## Install\n\nTo install the package language-arm:\n\n* In Atom: (Preferences->Install)\n* Shell: `$ apm install language-arm`\n\n## Screenshot\n\n![Example of Highlighting](https://raw.githubusercontent.com/dan-c-underwood/language-arm/master/example.png)\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dan-c-underwood/language-arm.git"
+  },
+  "version": "1.2.2"
+}

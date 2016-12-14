@@ -1,16 +1,43 @@
 {
-  "name": "minimap-linter",
-  "main": "./lib/minimap-linter",
-  "version": "1.1.1",
-  "description": "Minimap bindings for atom-linter",
-  "keywords": [],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AtomLinter/atom-minimap-linter.git"
+  "_args": [
+    [
+      {
+        "raw": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+        "spec": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+        "type": "local"
+      },
+      "/tmp/takaaki/apm-install-dir-116817-13963-1q82g22"
+    ]
+  ],
+  "_from": "../d-116817-13963-57h4ym/package.tgz",
+  "_id": "minimap-linter@1.6.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/minimap-linter",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+    "spec": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+    "type": "local"
   },
-  "license": "MIT",
-  "engines": {
-    "atom": ">=0.174.0 <2.0.0"
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-116817-13963-57h4ym/package.tgz",
+  "_shasum": "f10f2a9f5ef01fd4d83e6acf9f239a924cf65ec0",
+  "_shrinkwrap": null,
+  "_spec": "/tmp/takaaki/d-116817-13963-57h4ym/package.tgz",
+  "_where": "/tmp/takaaki/apm-install-dir-116817-13963-1q82g22",
+  "bugs": {
+    "url": "https://github.com/AtomLinter/atom-minimap-linter/issues"
   },
   "consumedServices": {
     "minimap": {
@@ -19,29 +46,23 @@
       }
     }
   },
-  "readme": "# minimap-linter package\n\nAtom package to display linter markers on minimap.\n\n![minimap-linter](https://raw.githubusercontent.com/nesukun/atom-minimap-linter/master/minimap-linter.gif)\n",
-  "readmeFilename": "README.md",
-  "bugs": {
-    "url": "https://github.com/AtomLinter/atom-minimap-linter/issues"
+  "dependencies": {},
+  "description": "Minimap bindings for atom-linter",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
   },
   "homepage": "https://github.com/AtomLinter/atom-minimap-linter#readme",
-  "_id": "minimap-linter@1.1.1",
-  "_shasum": "3eab7208a0872a287c545791bbedd0b0ca8a818f",
-  "_resolved": "file:../d-116230-12355-151o4a2/package.tgz",
-  "_from": "../d-116230-12355-151o4a2/package.tgz",
-  "_atomModuleCache": {
-    "version": 1,
-    "dependencies": [],
-    "extensions": {
-      ".js": [
-        "lib/minimap-linter-binding.js",
-        "lib/minimap-linter-config.js",
-        "lib/minimap-linter.js"
-      ],
-      ".json": [
-        "package.json"
-      ]
-    },
-    "folders": []
-  }
+  "keywords": [],
+  "license": "MIT",
+  "main": "./lib/minimap-linter",
+  "name": "minimap-linter",
+  "optionalDependencies": {},
+  "readme": "# minimap-linter package\n\nAtom package to display linter markers on minimap.\n\n![minimap-linter](https://raw.githubusercontent.com/nesukun/atom-minimap-linter/master/minimap-linter.gif)\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AtomLinter/atom-minimap-linter.git"
+  },
+  "version": "1.6.0"
 }

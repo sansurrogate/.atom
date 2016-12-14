@@ -1,0 +1,65 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+        "spec": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+        "type": "local"
+      },
+      "/tmp/takaaki/apm-install-dir-116922-6005-zq78h7"
+    ]
+  ],
+  "_from": "../d-116922-6005-e09f5n/package.tgz",
+  "_id": "language-rust@0.4.8",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/language-rust",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+    "spec": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-116922-6005-e09f5n/package.tgz",
+  "_shasum": "bfa8d55e83428fb03149f8019042196e20c4ef2f",
+  "_shrinkwrap": null,
+  "_spec": "/tmp/takaaki/d-116922-6005-e09f5n/package.tgz",
+  "_where": "/tmp/takaaki/apm-install-dir-116922-6005-zq78h7",
+  "bugs": {
+    "url": "https://github.com/zargony/atom-language-rust/issues"
+  },
+  "dependencies": {},
+  "description": "Rust language support in Atom",
+  "devDependencies": {},
+  "engines": {
+    "atom": ">0.50.0 <2.0.0"
+  },
+  "homepage": "https://github.com/zargony/atom-language-rust",
+  "keywords": [
+    "rust",
+    "language",
+    "grammar",
+    "syntax"
+  ],
+  "license": "MIT",
+  "name": "language-rust",
+  "optionalDependencies": {},
+  "readme": "# Rust language support in Atom\n\nAdds syntax highlighting and snippets to [Rust](http://www.rust-lang.org/) files in [Atom](http://atom.io/).\n\n## Install\n\nInstall the package `language-rust` in Atom (Preferences->Packages) or Atom's package manager from a shell:\n\n```bash\n$ apm install language-rust\n```\n\n## Bugs\n\nGrammar rules were written from scratch. They seem to work for most cases. However there are most certainly still a few cases that result in wrong syntax highlighting. Feel free to fix it and send a pull request, or open an issue to report it.\n\n## Links\n\n* [Rust](http://www.rust-lang.org/) -- a safe, concurrent, practical language\n* [Atom](http://atom.io/) -- a hackable text editor for the 21st Century\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zargony/atom-language-rust.git"
+  },
+  "version": "0.4.8"
+}

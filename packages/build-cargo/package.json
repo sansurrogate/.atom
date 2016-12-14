@@ -1,0 +1,84 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+        "spec": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+        "type": "local"
+      },
+      "/tmp/takaaki/apm-install-dir-1161110-12730-15zo096"
+    ]
+  ],
+  "_from": "../d-1161110-12730-va5oq4/package.tgz",
+  "_id": "build-cargo@1.2.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/build-cargo",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+    "spec": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:../d-1161110-12730-va5oq4/package.tgz",
+  "_shasum": "0a8153e64553be24aaa4ddc36a3dcd20f8cc805c",
+  "_shrinkwrap": null,
+  "_spec": "/tmp/takaaki/d-1161110-12730-va5oq4/package.tgz",
+  "_where": "/tmp/takaaki/apm-install-dir-1161110-12730-15zo096",
+  "bugs": {
+    "url": "https://github.com/AtomBuild/atom-build-cargo/issues"
+  },
+  "dependencies": {
+    "marked": "^0.3.6"
+  },
+  "description": "Runs Cargo targets",
+  "devDependencies": {
+    "atom-build-spec-helpers": "^0.4.0",
+    "babel-eslint": "^6.0.0",
+    "eslint": "^2.5.3",
+    "eslint-config-atom-build": "^3.0.0",
+    "fs-extra": "^0.26.7",
+    "temp": "^0.8.1"
+  },
+  "engines": {
+    "atom": "^1.0.0"
+  },
+  "homepage": "https://github.com/AtomBuild/atom-build-cargo#readme",
+  "keywords": [
+    "build",
+    "compile",
+    "cargo",
+    "rust",
+    "productivity"
+  ],
+  "license": "MIT",
+  "main": "lib/cargo.js",
+  "name": "build-cargo",
+  "optionalDependencies": {},
+  "providedServices": {
+    "builder": {
+      "description": "Runs Cargo targets",
+      "versions": {
+        "2.0.0": "provideBuilder"
+      }
+    }
+  },
+  "readme": "# Cargo (Rust) integration for Atom\n\n[![Build Status](https://img.shields.io/travis/AtomBuild/atom-build-cargo/master.svg?style=flat-square)](https://travis-ci.org/AtomBuild/atom-build-cargo)\n[![Gitter chat](https://badges.gitter.im/noseglid/atom-build.svg?style=flat-square)](https://gitter.im/noseglid/atom-build)\n\nUses [Atom Build](https://github.com/noseglid/atom-build) to build Rust projects by means of Cargo in the Atom editor.\n\nRequired packages:\n\n- [atom-build](https://github.com/noseglid/atom-build) to run Cargo commands.\n- [linter](https://atom.io/packages/linter) to display compiler messages.\n\n## Features\n\n- Allows to run various Cargo commands (`build`, `test`, `run`, `doc`, `update` etc.)\n- Supports extended commands [`cargo check`](https://github.com/rsolomo/cargo-check) and [`cargo clippy`](https://github.com/arcnmx/cargo-clippy).\n- Supports multi-crate projects (including Cargo workspaces).\n- Displays compiler messages and panics in a handy way.\n\n![Screencast](https://cloud.githubusercontent.com/assets/2101250/18028622/8bac6cf2-6c8c-11e6-9d3a-06258f829246.gif)\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AtomBuild/atom-build-cargo.git"
+  },
+  "version": "1.2.0"
+}

@@ -1,39 +1,43 @@
 'use babel'
 
+time_last_lint = new Date().getTime()
+lint_waiting = false
+
 CompositeDisposable = require('atom').CompositeDisposable;
 
 module.exports = {
   config: {
     execPath: {
       title: "GCC Executable Path",
-      description: "Note for Windows/Mac OSX users: please ensure that GCC is in your ```$PATH``` otherwise the linter might not work. If your path contains spaces, it needs to be enclosed in double quotes.",
+      description: "Note for Windows/Mac OS X users: please ensure that GCC is in your ```$PATH``` otherwise the linter might not work. If your path contains spaces, it needs to be enclosed in double quotes.",
       type: "string",
       default: "/usr/bin/g++",
       order : 1
     },
     gccDefaultCFlags: {
       title: "C Flags",
-      description: "Supports the use of espcaped characters",
+      description: "Supports the use of escaped characters",
       type: "string",
       default: "-c -Wall",
       order : 2
     },
     gccDefaultCppFlags: {
       title: "C++ Flags",
-      description: "Supports the use of espcaped characters",
+      description: "Supports the use of escaped characters",
       type: "string",
       default: "-c -Wall -std=c++11",
       order : 3
     },
     gccIncludePaths: {
       title: "GCC Include Paths",
-      description: "Enter your include paths as a comma-separated list. Paths starting with ```.``` or ```..``` are expanded relative to the project root/file path. If any of your paths contain spaces, they need to be enclosed in double quotes.",
+      description: "Enter your include paths as a comma-separated list. Paths starting with ```.``` or ```..``` are expanded relative to the project root path and paths starting with a ```-``` are expanded relative to the path of the active file. If any of your paths contain spaces, they need to be enclosed in double quotes. To expand a directory recursively, add ```/*``` to the end of the path",
       type: "string",
       default: " ",
       order : 4
     },
     gccErrorLimit: {
       title: "GCC Error Limit",
+      description: "To completely remove `-fmax-errors`, simply enter `-1` here.",
       type: "integer",
       default: 0,
       order : 5
@@ -44,19 +48,44 @@ module.exports = {
       default: false,
       order : 6
     },
+    gccErrorString: {
+        title: "String GCC prepends to errors",
+        type: "string",
+        default: "error",
+        order: 7
+    },
+    gccWarningString: {
+        title: "String GCC prepends to warnings",
+        type: "string",
+        default: "warning",
+        order: 8
+    },
+    gccNoteString: {
+        title: "String GCC prepends to notes",
+        type: "string",
+        default: "note",
+        order: 9
+    },
     gccLintOnTheFly: {
       title: "Lint on-the-fly",
       description: "Please ensure any auto-saving packages are disabled before using this feature",
       type: "boolean",
       default: false,
-      order : 7
+      order : 10
+    },
+    gccLintOnTheFlyInterval: {
+      title: "Lint on-the-fly Interval",
+      description: "Time interval (in ms) between linting",
+      type: "integer",
+      default: 300,
+      order : 11
     },
     gccDebug: {
       title: "Show Debugging Messages",
       description: "Please read the linter-gcc wiki [here](https://github.com/hebaishi/linter-gcc/wiki) before reporting any issues.",
       type: "boolean",
       default: false,
-      order : 8
+      order : 12
     }
   },
 
@@ -70,7 +99,7 @@ module.exports = {
 
   lint: function(editor, linted_file, real_file){
     const helpers=require("atom-linter");
-    const regex = "(?<file>.+):(?<line>\\d+):(?<col>\\d+):\\s*\\w*\\s*(?<type>(error|warning|note)):\\s*(?<message>.*)"
+    const regex = `(?<file>.+):(?<line>\\d+):(?<col>\\d+):\\s*\\w*\\s*(?<type>(${atom.config.get("linter-gcc.gccErrorString")}|${atom.config.get("linter-gcc.gccWarningString")}|${atom.config.get("linter-gcc.gccNoteString")})):\\s*(?<message>.*)`
     command = require("./utility").buildCommand(editor, linted_file);
     return helpers.exec(command.binary, command.args, {stream: "stderr"}).then(output => {
       msgs = helpers.parse(output, regex)
@@ -106,6 +135,8 @@ module.exports = {
     );
     }
     require("atom-package-deps").install("linter-gcc");
+    time_last_lint = new Date().getTime()
+    lint_waiting = false
   },
   deactivate: function() {
     this.subscriptions.dispose()
@@ -121,10 +152,22 @@ module.exports = {
       editor = utility.getValidEditor(atom.workspace.getActiveTextEditor());
       if (!editor) return;
       if (atom.config.get("linter-gcc.gccLintOnTheFly") == false) return;
-      grammar_type = utility.grammarType(editor.getGrammar().name)
-      filename = String(module.exports.temp_file[grammar_type])
-      require('fs-extra').outputFileSync(filename, editor.getText());
-      module.exports.lint(editor, filename, editor.getPath());
+      if (lint_waiting) return;
+      lint_waiting = true
+      interval = atom.config.get("linter-gcc.gccLintOnTheFlyInterval")
+      time_now = new Date().getTime()
+      timeout = interval - (time_now - time_last_lint);
+      setTimeout(
+        function() {
+          time_last_lint = new Date().getTime()
+          lint_waiting = false
+          grammar_type = utility.grammarType(editor.getGrammar().name)
+          filename = String(module.exports.temp_file[grammar_type])
+          require('fs-extra').outputFileSync(filename, editor.getText());
+          module.exports.lint(editor, filename, editor.getPath());
+        },
+        timeout
+      );
     };
 
     lintOnSave = function(){

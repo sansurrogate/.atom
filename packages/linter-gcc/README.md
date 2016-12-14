@@ -1,11 +1,15 @@
 # linter-gcc
 [![Travis](https://img.shields.io/travis/hebaishi/linter-gcc.svg?style=flat-square)](https://travis-ci.org/hebaishi/linter-gcc) [![apm](https://img.shields.io/apm/dm/linter-gcc.svg?style=flat-square)](https://atom.io/packages/linter-gcc)
+[![Paypal](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44GUEE2BT7XVG)
 
 Linter plugin for [Linter](https://github.com/AtomLinter/Linter), provides an interface to gcc/g++.
 
 Used with files with grammar "C", "C++" and ["C++14"](https://atom.io/packages/language-cpp14).
 
 Now with linting **on-the-fly**! This is a new feature so please open an issue if you encounter any problems.
+
+## Important info for Mac OSX users!
+If you have XCode installed on OSX, the `gcc/g++` commands will both link to `clang`. This can cause issues with the `-fmax-errors` option used by linter-gcc, which isn't recognised by clang. To properly install GCC, you need to install it with Homebrew (instructions [here](https://github.com/hebaishi/linter-gcc/issues/62)).
 
 ## Linter in action!
 

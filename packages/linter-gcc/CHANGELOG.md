@@ -1,3 +1,22 @@
+## 0.6.15
+* Fix undefined string error
+
+## 0.6.14
+* Add description to max-errors option
+
+## 0.6.13
+* Fix error when modifying unsaved buffer
+
+## 0.6.12
+* Make Paypal button smaller
+
+## 0.6.11
+* Add Paypal button
+
+## 0.6.10
+* Add recursive include path expansion
+* Add option to turn off ```-fmax-errors```
+
 ## 0.6.9
 * Fix linter-gcc reporting incorrect filename
 

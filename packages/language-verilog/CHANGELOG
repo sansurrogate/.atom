@@ -1,0 +1,16 @@
+v 0.5.0
+  - Fix single line comments
+  - Add more snippets
+  - Add more keywords for SystemVerilo
+
+v 0.4.0
+  - Add SystemVerilog header *.svh to supported filetypes
+
+v 0.3.0
+  - Rename scoped properties to fix deprecated Package.loadSettings call
+
+v 0.2.0
+  - Add additional keywords from Verilog IEEE Std 1800-2012
+
+v 0.1.0
+  - Initial import from TextMate bundle

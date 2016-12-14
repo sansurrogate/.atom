@@ -1,0 +1,108 @@
+(function() {
+  var LinterRust, linter;
+
+  LinterRust = require('../lib/linter-rust');
+
+  linter = new LinterRust();
+
+  describe("LinterRust::parse", function() {
+    it("should return 0 messages for an empty string", function() {
+      return expect(linter.parse('')).toEqual([]);
+    });
+    it("should properly parse one line error message", function() {
+      return expect(linter.parse('my/awesome file.rs:1:2: 3:4 error: my awesome text\n')).toEqual([
+        {
+          type: 'Error',
+          text: 'my awesome text',
+          filePath: 'my/awesome file.rs',
+          range: [[0, 1], [2, 3]]
+        }
+      ]);
+    });
+    it("should properly parse one line warning message", function() {
+      return expect(linter.parse('foo:33:44: 22:33 warning: äüö<>\n')).toEqual([
+        {
+          type: 'Warning',
+          text: 'äüö<>',
+          filePath: 'foo',
+          range: [[32, 43], [21, 32]]
+        }
+      ]);
+    });
+    it("should return messages with a range of at least one character", function() {
+      expect(linter.parse('foo:1:1: 1:1 error: text\n')).toEqual([
+        {
+          type: 'Error',
+          text: 'text',
+          filePath: 'foo',
+          range: [[0, 0], [0, 1]]
+        }
+      ]);
+      return expect(linter.parse('foo:1:1: 2:1 error: text\n')).toEqual([
+        {
+          type: 'Error',
+          text: 'text',
+          filePath: 'foo',
+          range: [[0, 0], [1, 1]]
+        }
+      ]);
+    });
+    it("should properly parse multiline messages", function() {
+      expect(linter.parse('bar:1:2: 3:4 error: line one\ntwo\n')).toEqual([
+        {
+          type: 'Error',
+          text: 'line one\ntwo',
+          filePath: 'bar',
+          range: [[0, 1], [2, 3]]
+        }
+      ]);
+      expect(linter.parse('bar:1:2: 3:4 error: line one\ntwo\nfoo:1:1: 1:2 warning: simple line\n')).toEqual([
+        {
+          type: 'Error',
+          text: 'line one\ntwo',
+          filePath: 'bar',
+          range: [[0, 1], [2, 3]]
+        }, {
+          type: 'Warning',
+          text: 'simple line',
+          filePath: 'foo',
+          range: [[0, 0], [0, 1]]
+        }
+      ]);
+      return expect(linter.parse('bar:1:2: 3:4 error: line one\ntwo\nthree\nfoo:1   shouldnt match')).toEqual([
+        {
+          type: 'Error',
+          text: 'line one\ntwo\nthree',
+          filePath: 'bar',
+          range: [[0, 1], [2, 3]]
+        }
+      ]);
+    });
+    it("should also cope with windows line breaks", function() {
+      var multi;
+      expect(linter.parse('a:1:2: 3:4 error: a\r\nb\n')[0].text).toEqual('a\r\nb');
+      multi = linter.parse('a:1:2: 3:4 error: a\n\rb\n\rx:1:2: 3:4 error: asd\r\n');
+      expect(multi[0].text).toEqual('a\n\rb');
+      return expect(multi[1].text).toEqual('asd');
+    });
+    return it("should not throw an error with extra whitespace in paths", function() {
+      var buildLinterWithWhitespacePath, resetPath;
+      buildLinterWithWhitespacePath = function() {
+        atom.config.set("linter-rust.rustc", "rustc\n");
+        atom.config.set("linter-rust.cargo", "cargo\n");
+        return new LinterRust();
+      };
+      resetPath = function() {
+        atom.config.set("linter-rust.rustc", "rustc");
+        return atom.config.set("linter-rust.cargo", "cargo");
+      };
+      expect(buildLinterWithWhitespacePath).not.toThrow();
+      return resetPath();
+    });
+  });
+
+}).call(this);
+
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAiZmlsZSI6ICIiLAogICJzb3VyY2VSb290IjogIiIsCiAgInNvdXJjZXMiOiBbCiAgICAiL2hvbWUvdGFrYWFraS8uYXRvbS9wYWNrYWdlcy9saW50ZXItcnVzdC9zcGVjL3BhcnNlLXNwZWMuY29mZmVlIgogIF0sCiAgIm5hbWVzIjogW10sCiAgIm1hcHBpbmdzIjogIkFBQUE7QUFBQSxNQUFBLGtCQUFBOztBQUFBLEVBQUEsVUFBQSxHQUFhLE9BQUEsQ0FBUSxvQkFBUixDQUFiLENBQUE7O0FBQUEsRUFFQSxNQUFBLEdBQWEsSUFBQSxVQUFBLENBQUEsQ0FGYixDQUFBOztBQUFBLEVBSUEsUUFBQSxDQUFTLG1CQUFULEVBQThCLFNBQUEsR0FBQTtBQUM1QixJQUFBLEVBQUEsQ0FBRyw4Q0FBSCxFQUFtRCxTQUFBLEdBQUE7YUFDakQsTUFBQSxDQUFPLE1BQU0sQ0FBQyxLQUFQLENBQWEsRUFBYixDQUFQLENBQXdCLENBQUMsT0FBekIsQ0FBaUMsRUFBakMsRUFEaUQ7SUFBQSxDQUFuRCxDQUFBLENBQUE7QUFBQSxJQUdBLEVBQUEsQ0FBRyw4Q0FBSCxFQUFtRCxTQUFBLEdBQUE7YUFDakQsTUFBQSxDQUFPLE1BQU0sQ0FBQyxLQUFQLENBQWEsc0RBQWIsQ0FBUCxDQUNFLENBQUMsT0FESCxDQUNXO1FBQUM7QUFBQSxVQUNSLElBQUEsRUFBTSxPQURFO0FBQUEsVUFFUixJQUFBLEVBQU0saUJBRkU7QUFBQSxVQUdSLFFBQUEsRUFBVSxvQkFIRjtBQUFBLFVBSVIsS0FBQSxFQUFPLENBQUMsQ0FBQyxDQUFELEVBQUksQ0FBSixDQUFELEVBQVMsQ0FBQyxDQUFELEVBQUksQ0FBSixDQUFULENBSkM7U0FBRDtPQURYLEVBRGlEO0lBQUEsQ0FBbkQsQ0FIQSxDQUFBO0FBQUEsSUFZQSxFQUFBLENBQUcsZ0RBQUgsRUFBcUQsU0FBQSxHQUFBO2FBQ25ELE1BQUEsQ0FBTyxNQUFNLENBQUMsS0FBUCxDQUFhLG1DQUFiLENBQVAsQ0FDRSxDQUFDLE9BREgsQ0FDVztRQUFD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
+
+//# sourceURL=/home/takaaki/.atom/packages/linter-rust/spec/parse-spec.coffee

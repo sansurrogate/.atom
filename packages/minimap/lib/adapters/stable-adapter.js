@@ -28,6 +28,8 @@ export default class StableAdapter {
   }
 
   getHeight () {
+    if (this.editorDestroyed()) { return 0 }
+
     if (this.useCache) {
       if (!this.heightCache) {
         this.heightCache = this.textEditorElement.getHeight()
@@ -38,20 +40,44 @@ export default class StableAdapter {
   }
 
   getScrollTop () {
+    if (this.editorDestroyed()) { return 0 }
+
     if (this.useCache) {
       if (!this.scrollTopCache) {
-        this.scrollTopCache = this.textEditorElement.getScrollTop()
+        this.scrollTopCache = this.computeScrollTop()
       }
       return this.scrollTopCache
     }
-    return this.textEditorElement.getScrollTop()
+    return this.computeScrollTop()
+  }
+
+  computeScrollTop () {
+    if (this.editorDestroyed()) { return 0 }
+
+    const scrollTop = this.textEditorElement.getScrollTop()
+    const lineHeight = this.textEditor.getLineHeightInPixels()
+    let firstRow = this.textEditorElement.getFirstVisibleScreenRow()
+    let lineTop = this.textEditorElement.pixelPositionForScreenPosition([firstRow, 0]).top
+
+    if (lineTop > scrollTop) {
+      firstRow -= 1
+      lineTop = this.textEditorElement.pixelPositionForScreenPosition([firstRow, 0]).top
+    }
+
+    const lineY = firstRow * lineHeight
+    const offset = Math.min(scrollTop - lineTop, lineHeight)
+    return lineY + offset
   }
 
   setScrollTop (scrollTop) {
+    if (this.editorDestroyed()) { return }
+
     this.textEditorElement.setScrollTop(scrollTop)
   }
 
   getScrollLeft () {
+    if (this.editorDestroyed()) { return 0 }
+
     if (this.useCache) {
       if (!this.scrollLeftCache) {
         this.scrollLeftCache = this.textEditorElement.getScrollLeft()
@@ -62,6 +88,8 @@ export default class StableAdapter {
   }
 
   getMaxScrollTop () {
+    if (this.editorDestroyed()) { return 0 }
+
     if (this.maxScrollTopCache != null && this.useCache) {
       return this.maxScrollTopCache
     }
@@ -78,5 +106,12 @@ export default class StableAdapter {
     }
 
     return maxScrollTop
+  }
+
+  editorDestroyed () {
+    return !this.textEditor ||
+           this.textEditor.isDestroyed() ||
+           !this.textEditorElement.getModel() ||
+           !this.textEditorElement.parentNode
   }
 }

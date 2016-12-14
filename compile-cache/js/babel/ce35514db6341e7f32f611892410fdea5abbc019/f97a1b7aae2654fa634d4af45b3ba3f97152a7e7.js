@@ -1,0 +1,74 @@
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.enableClickEvents = enableClickEvents;
+exports.disableClickEvents = disableClickEvents;
+exports.isClickEventsEnabled = isClickEventsEnabled;
+
+var _atom = require('atom');
+
+var _mainJs = require('./main.js');
+
+var _autohideTreeViewJs = require('./autohide-tree-view.js');
+
+var _utilsJs = require('./utils.js');
+
+'use babel';
+
+var disposables;
+
+function enableClickEvents() {
+  if (disposables) return;
+  disposables = new _atom.CompositeDisposable(
+  // clicks on the tree view toggle the tree view
+  (0, _utilsJs.domListener)(_mainJs.treeViewEl, 'click', function (event) {
+    if (nextClickInvalidated || event.button != 0) return;
+    event.stopPropagation();
+    (0, _autohideTreeViewJs.toggleTreeView)();
+    uninvalidateNextClick();
+  }),
+
+  // ignore the next click on the tree view if
+  // the event target is a child of tree view
+  // but not .tree-view-scroller, on which it
+  // should just toggle the tree view
+  (0, _utilsJs.domListener)(_mainJs.treeViewEl, 'click', function (event) {
+    if (!(0, _autohideTreeViewJs.isTreeViewVisible)() || event.button != 0) return;
+    invalidateNextClick();
+  }, { delegationTarget: ':not(.tree-view-scroller)' }),
+
+  // hide and unfocus the tree view when the
+  // user clicks anything other than the tree
+  // view
+  // addDelegatedEventListener(document.body, 'click', ':not(.tree-view-resizer), :not(.tree-view-resizer) *', event => {
+  (0, _utilsJs.domListener)(document.body, 'click', function (event) {
+    if (event.button != 0 || (0, _utilsJs.isChildOf)(event.target, _mainJs.treeViewEl.parentNode)) return;
+    (0, _autohideTreeViewJs.clearFocusedElement)();
+    (0, _autohideTreeViewJs.hideTreeView)();
+    uninvalidateNextClick();
+  }));
+}
+
+function disableClickEvents() {
+  if (!disposables) return;
+  disposables.dispose();
+  disposables = null;
+}
+
+function isClickEventsEnabled() {
+  return !!disposables;
+}
+
+// keep track if the next click event
+// should trigger a toggleTreeView
+var nextClickInvalidated = false;
+
+function invalidateNextClick() {
+  nextClickInvalidated = true;
+}
+
+function uninvalidateNextClick() {
+  nextClickInvalidated = false;
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3Rha2Fha2kvLmF0b20vcGFja2FnZXMvYXV0b2hpZGUtdHJlZS12aWV3L2xpYi9jbGljay1ldmVudHMuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7OztvQkFDa0MsTUFBTTs7c0JBQ2YsV0FBVzs7a0NBRVIseUJBQXlCOzt1QkFDaEIsWUFBWTs7QUFMakQsV0FBVyxDQUFDOztBQU9aLElBQUksV0FBVyxDQUFDOztBQUVULFNBQVMsaUJBQWlCLEdBQUc7QUFDbEMsTUFBRyxXQUFXLEVBQUUsT0FBTztBQUN2QixhQUFXLEdBQUc7O0FBRVosZ0RBQXdCLE9BQU8sRUFBRSxVQUFBLEtBQUssRUFBSTtBQUN4QyxRQUFHLG9CQUFvQixJQUFJLEtBQUssQ0FBQyxNQUFNLElBQUksQ0FBQyxFQUFFLE9BQU87QUFDckQsU0FBSyxDQUFDLGVBQWUsRUFBRSxDQUFDO0FBQ3hCLDZDQUFnQixDQUFDO0FBQ2pCLHlCQUFxQixFQUFFLENBQUM7R0FDekIsQ0FBQzs7Ozs7O0FBTUYsZ0RBQXdCLE9BQU8sRUFBRSxVQUFBLEtBQUssRUFBSTtBQUN4QyxRQUFHLENBQUMsNENBQW1CLElBQUksS0FBSyxDQUFDLE1BQU0sSUFBSSxDQUFDLEVBQUUsT0FBTztBQUNyRCx1QkFBbUIsRUFBRSxDQUFDO0dBQ3ZCLEVBQUUsRUFBQyxnQkFBZ0IsRUFBRSwyQkFBMkIsRUFBQyxDQUFDOzs7Ozs7QUFNbkQsNEJBQVksUUFBUSxDQUFDLElBQUksRUFBRSxPQUFPLEVBQUUsVUFBQSxLQUFLLEVBQUk7QUFDM0MsUUFBRyxLQUFLLENBQUMsTUFBTSxJQUFJLENBQUMsSUFBSSx3QkFBVSxLQUFLLENBQUMsTUFBTSxFQUFFLG1CQUFXLFVBQVUsQ0FBQyxFQUFFLE9BQU87QUFDL0Usa0RBQXFCLENBQUM7QUFDdEIsMkNBQWMsQ0FBQztBQUNmLHlCQUFxQixFQUFFLENBQUM7R0FDekIsQ0FBQyxDQUNILENBQUM7Q0FDSDs7QUFFTSxTQUFTLGtCQUFrQixHQUFHO0FBQ25DLE1BQUcsQ0FBQyxXQUFXLEVBQUUsT0FBTztBQUN4QixhQUFXLENBQUMsT0FBTyxFQUFFLENBQUM7QUFDdEIsYUFBVyxHQUFHLElBQUksQ0FBQztDQUNwQjs7QUFFTSxTQUFTLG9CQUFvQixHQUFHO0FBQ3JDLFNBQU8sQ0FBQyxDQUFDLFdBQVcsQ0FBQztDQUN0Qjs7OztBQUlELElBQUksb0JBQW9CLEdBQUcsS0FBSyxDQUFDOztBQUVqQyxTQUFTLG1CQUFtQixHQUFHO0FBQzdCLHNCQUFvQixHQUFHLElBQUksQ0FBQztDQUM3Qjs7QUFFRCxTQUFTLHFCQUFxQixHQUFHO0FBQy9CLHNCQUFvQixHQUFHLEtBQUssQ0FBQztDQUM5QiIsImZpbGUiOiIvaG9tZS90YWthYWtpLy5hdG9tL3BhY2thZ2VzL2F1dG9oaWRlLXRyZWUtdmlldy9saWIvY2xpY2stZXZlbnRzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiJ3VzZSBiYWJlbCc7XG5pbXBvcnQge0NvbXBvc2l0ZURpc3Bvc2FibGV9IGZyb20gJ2F0b20nO1xuaW1wb3J0IHt0cmVlVmlld0VsfSBmcm9tICcuL21haW4uanMnO1xuaW1wb3J0IHtoaWRlVHJlZVZpZXcsIHRvZ2dsZVRyZWVWaWV3LCBpc1RyZWVWaWV3VmlzaWJsZSxcbiAgY2xlYXJGb2N1c2VkRWxlbWVudH0gZnJvbSAnLi9hdXRvaGlkZS10cmVlLXZpZXcuanMnO1xuaW1wb3J0IHtpc0NoaWxkT2YsIGRvbUxpc3RlbmVyfSBmcm9tICcuL3V0aWxzLmpzJztcblxudmFyIGRpc3Bvc2FibGVzO1xuXG5leHBvcnQgZnVuY3Rpb24gZW5hYmxlQ2xpY2tFdmVudHMoKSB7XG4gIGlmKGRpc3Bvc2FibGVzKSByZXR1cm47XG4gIGRpc3Bvc2FibGVzID0gbmV3IENvbXBvc2l0ZURpc3Bvc2FibGUoXG4gICAgLy8gY2xpY2tzIG9uIHRoZSB0cmVlIHZpZXcgdG9nZ2xlIHRoZSB0cmVlIHZpZXdcbiAgICBkb21MaXN0ZW5lcih0cmVlVmlld0VsLCAnY2xpY2snLCBldmVudCA9PiB7XG4gICAgICBpZihuZXh0Q2xpY2tJbnZhbGlkYXRlZCB8fCBldmVudC5idXR0b24gIT0gMCkgcmV0dXJuO1xuICAgICAgZXZlbnQuc3RvcFByb3BhZ2F0aW9uKCk7XG4gICAgICB0b2dnbGVUcmVlVmlldygpO1xuICAgICAgdW5pbnZhbGlkYXRlTmV4dENsaWNrKCk7XG4gICAgfSksXG5cbiAgICAvLyBpZ25vcmUgdGhlIG5leHQgY2xpY2sgb24gdGhlIHRyZWUgdmlldyBpZlxuICAgIC8vIHRoZSBldmVudCB0YXJnZXQgaXMgYSBjaGlsZCBvZiB0cmVlIHZpZXdcbiAgICAvLyBidXQgbm90IC50cmVlLXZpZXctc2Nyb2xsZXIsIG9uIHdoaWNoIGl0XG4gICAgLy8gc2hvdWxkIGp1c3QgdG9nZ2xlIHRoZSB0cmVlIHZpZXdcbiAgICBkb21MaXN0ZW5lcih0cmVlVmlld0VsLCAnY2xpY2snLCBldmVudCA9PiB7XG4gICAgICBpZighaXNUcmVlVmlld1Zpc2libGUoKSB8fCBldmVudC5idXR0b24gIT0gMCkgcmV0dXJuO1xuICAgICAgaW52YWxpZGF0ZU5leHRDbGljaygpO1xuICAgIH0sIHtkZWxlZ2F0aW9uVGFyZ2V0OiAnOm5vdCgudHJlZS12aWV3LXNjcm9sbGVyKSd9KSxcblxuICAgIC8vIGhpZGUgYW5kIHVuZm9jdXMgdGhlIHRyZWUgdmlldyB3aGVuIHRoZVxuICAgIC8vIHVzZXIgY2xpY2tzIGFueXRoaW5nIG90aGVyIHRoYW4gdGhlIHRyZWVcbiAgICAvLyB2aWV3XG4gICAgLy8gYWRkRGVsZWdhdGVkRXZlbnRMaXN0ZW5lcihkb2N1bWVudC5ib2R5LCAnY2xpY2snLCAnOm5vdCgudHJlZS12aWV3LXJlc2l6ZXIpLCA6bm90KC50cmVlLXZpZXctcmVzaXplcikgKicsIGV2ZW50ID0+IHtcbiAgICBkb21MaXN0ZW5lcihkb2N1bWVudC5ib2R5LCAnY2xpY2snLCBldmVudCA9PiB7XG4gICAgICBpZihldmVudC5idXR0b24gIT0gMCB8fCBpc0NoaWxkT2YoZXZlbnQudGFyZ2V0LCB0cmVlVmlld0VsLnBhcmVudE5vZGUpKSByZXR1cm47XG4gICAgICBjbGVhckZvY3VzZWRFbGVtZW50KCk7XG4gICAgICBoaWRlVHJlZVZpZXcoKTtcbiAgICAgIHVuaW52YWxpZGF0ZU5leHRDbGljaygpO1xuICAgIH0pLFxuICApO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gZGlzYWJsZUNsaWNrRXZlbnRzKCkge1xuICBpZighZGlzcG9zYWJsZXMpIHJldHVybjtcbiAgZGlzcG9zYWJsZXMuZGlzcG9zZSgpO1xuICBkaXNwb3NhYmxlcyA9IG51bGw7XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBpc0NsaWNrRXZlbnRzRW5hYmxlZCgpIHtcbiAgcmV0dXJuICEhZGlzcG9zYWJsZXM7XG59XG5cbi8vIGtlZXAgdHJhY2sgaWYgdGhlIG5leHQgY2xpY2sgZXZlbnRcbi8vIHNob3VsZCB0cmlnZ2VyIGEgdG9nZ2xlVHJlZVZpZXdcbnZhciBuZXh0Q2xpY2tJbnZhbGlkYXRlZCA9IGZhbHNlO1xuXG5mdW5jdGlvbiBpbnZhbGlkYXRlTmV4dENsaWNrKCkge1xuICBuZXh0Q2xpY2tJbnZhbGlkYXRlZCA9IHRydWU7XG59XG5cbmZ1bmN0aW9uIHVuaW52YWxpZGF0ZU5leHRDbGljaygpIHtcbiAgbmV4dENsaWNrSW52YWxpZGF0ZWQgPSBmYWxzZTtcbn1cbiJdfQ==
+//# sourceURL=/home/takaaki/.atom/packages/autohide-tree-view/lib/click-events.js

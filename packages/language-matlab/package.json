@@ -1,0 +1,38 @@
+{
+  "name": "language-matlab",
+  "version": "0.2.1",
+  "description": "MATLAB/Octave language support for Atom",
+  "keywords": [
+    "MATLAB",
+    "Octave"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesRitchie/language-matlab.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {},
+  "readme": "# MATLAB/Octave language support for Atom\n\n[Converted](http://atom.io/docs/latest/converting-a-text-mate-bundle)\nfrom [matlab.tmbundle](https://github.com/textmate/matlab.tmbundle).\n\nContributions welcome.\n\n## Contributors\n\n* [James Ritchie](https:github.com/JamesRitchie)\n* [Salvatore Gentile](https://github.com/SalGnt)\n* [Tom Rijndorp](https://github.com/tomrijndorp)\n\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/JamesRitchie/language-matlab/issues"
+  },
+  "homepage": "https://github.com/JamesRitchie/language-matlab#readme",
+  "_id": "language-matlab@0.2.1",
+  "_shasum": "fc17693927c5561214300b6aa4d4c998743c7d7c",
+  "_resolved": "file:../d-11682-14660-txo1v8/package.tgz",
+  "_from": "../d-11682-14660-txo1v8/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".json": [
+        "package.json"
+      ]
+    },
+    "folders": []
+  }
+}

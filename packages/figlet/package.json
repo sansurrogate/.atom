@@ -1,7 +1,7 @@
 {
   "name": "figlet",
   "main": "./lib/figlet",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Converts a selection into ascii-art using figlet",
   "repository": {
     "type": "git",
@@ -21,10 +21,10 @@
     "url": "https://github.com/abe33/atom-figlet/issues"
   },
   "homepage": "https://github.com/abe33/atom-figlet#readme",
-  "_id": "figlet@0.5.3",
-  "_shasum": "4aeca2a0a780f608bf51f6a0771587109c9df617",
-  "_resolved": "file:../d-116229-10641-npny2d/package.tgz",
-  "_from": "../d-116229-10641-npny2d/package.tgz",
+  "_id": "figlet@0.5.4",
+  "_shasum": "d055e6ee9ec9c89cbcf3d69ceb84a3310f907f5a",
+  "_resolved": "file:../d-116725-12989-1ws6et5/package.tgz",
+  "_from": "../d-116725-12989-1ws6et5/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -65,7 +65,7 @@
       },
       {
         "name": "es5-ext",
-        "version": "0.10.11",
+        "version": "0.10.12",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/es6-weak-map/node_modules/es5-ext/index.js"
       },
       {
@@ -75,7 +75,7 @@
       },
       {
         "name": "es6-symbol",
-        "version": "3.0.2",
+        "version": "3.1.0",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/es6-weak-map/node_modules/es5-ext/node_modules/es6-symbol/index.js"
       },
       {
@@ -115,7 +115,7 @@
       },
       {
         "name": "figlet",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "path": "node_modules/figlet/lib/node-figlet.js"
       }
     ],
@@ -659,8 +659,7 @@
         "node_modules/figlet/examples/node/app.js",
         "node_modules/figlet/examples/node/appSync.js",
         "node_modules/figlet/lib/figlet.js",
-        "node_modules/figlet/lib/node-figlet.js",
-        "node_modules/figlet/sample_test.js"
+        "node_modules/figlet/lib/node-figlet.js"
       ],
       ".json": [
         "node_modules/atom-space-pen-views/node_modules/fuzzaldrin/package.json",
@@ -918,7 +917,7 @@
         ],
         "dependencies": {
           "es6-iterator": "2",
-          "es6-symbol": "~3.0.2"
+          "es6-symbol": "~3.1"
         }
       },
       {
@@ -941,7 +940,7 @@
         ],
         "dependencies": {
           "d": "~0.1.1",
-          "es5-ext": "~0.10.10"
+          "es5-ext": "~0.10.11"
         }
       },
       {

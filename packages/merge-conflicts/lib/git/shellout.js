@@ -10,26 +10,29 @@ let path = require("path");
 
 let common = require("./common");
 
-exports.getGitContext = function (filePath) {
-  return Promise.all([locateGit(), common.getActiveRepo(filePath)])
+exports.getContext = function (filePath) {
+  return Promise.all([locateGit(), common.getActiveGitRepo(filePath)])
     .then((results) => {
-      let gitCmd = results[0];
-      let atomRepo = results[1];
+      const gitCmd = results[0];
+      const repoDetails = results[1];
 
-      if (!gitCmd) return null;
-      if (!atomRepo) return null;
+      if (!gitCmd || !repoDetails) return null;
 
-      let wd = atomRepo.getWorkingDirectory();
-      return new GitContext(atomRepo, gitCmd, wd);
+      const repository = repoDetails.repository;
+      const priority = repoDetails.priority;
+      let wd = repository.getWorkingDirectory();
+      return new GitContext(repository, gitCmd, wd, priority);
     });
 };
 
-function GitContext(repository, gitCmd, workingDirPath) {
+function GitContext(repository, gitCmd, workingDirPath, priority) {
   this.repository = repository;
   this.gitCmd = gitCmd;
   this.workingDirPath = workingDirPath;
   this.workingDirectory = new Directory(workingDirPath, false);
   this.runProcess = (args) => new BufferedProcess(args);
+  this.priority = priority;
+  this.resolveText = "Stage";
 };
 
 GitContext.prototype.readConflicts = function () {
@@ -41,15 +44,15 @@ GitContext.prototype.readConflicts = function () {
       statusCodesFrom(chunk, (index, work, p) => {
         if (index === "U" && work === "U") {
           conflicts.push({
-            path: p,
-            message: "both modified"
+            path: path.normalize(p),
+            message: "both modified",
           });
         }
 
         if (index === "A" && work === "A") {
           conflicts.push({
-            path: p,
-            message: "both added"
+            path: path.normalize(p),
+            message: "both added",
           });
         }
       });
@@ -78,13 +81,13 @@ GitContext.prototype.readConflicts = function () {
   });
 };
 
-GitContext.prototype.isStaged = function (filePath) {
+GitContext.prototype.isResolvedFile = function (filePath) {
   let staged = true;
 
   return new Promise((resolve, reject) => {
     let stdoutHandler = (chunk) => {
       statusCodesFrom(chunk, (index, work, p) => {
-        if (p === filePath) {
+        if (path.normalize(p) === filePath) {
           staged = index === "M" && work === " ";
         }
       });
@@ -134,8 +137,9 @@ GitContext.prototype.checkoutSide = function (sideName, filePath) {
   });
 };
 
-GitContext.prototype.add = function (filePath) {
-  this.repository.repo.add(filePath);
+GitContext.prototype.resolveFile = function (filePath) {
+  // git-utils wants paths with forward slashes. relativize takes care of that.
+  this.repository.repo.add(this.repository.repo.relativize(filePath));
   return Promise.resolve();
 };
 
@@ -228,3 +232,15 @@ let statusCodesFrom = function (chunk, handler) {
     }
   });
 };
+
+GitContext.prototype.joinPath = function(relativePath) {
+  return path.join(this.workingDirPath, relativePath);
+}
+
+GitContext.prototype.quit = function(wasRebasing) {
+  common.quitContext(wasRebasing);
+}
+
+GitContext.prototype.complete = function(wasRebasing) {
+  common.completeContext(wasRebasing);
+}

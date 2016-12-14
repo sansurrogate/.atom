@@ -1,7 +1,7 @@
 {
   "name": "linter-gcc",
   "main": "./lib/main",
-  "version": "0.6.9",
+  "version": "0.6.15",
   "description": "Lint C and C++ source files using gcc / g++",
   "keywords": [
     "lint",
@@ -61,33 +61,53 @@
       "atom": true
     }
   },
-  "readme": "# linter-gcc\n[![Travis](https://img.shields.io/travis/hebaishi/linter-gcc.svg?style=flat-square)](https://travis-ci.org/hebaishi/linter-gcc) [![apm](https://img.shields.io/apm/dm/linter-gcc.svg?style=flat-square)](https://atom.io/packages/linter-gcc)\n\nLinter plugin for [Linter](https://github.com/AtomLinter/Linter), provides an interface to gcc/g++.\n\nUsed with files with grammar \"C\", \"C++\" and [\"C++14\"](https://atom.io/packages/language-cpp14).\n\nNow with linting **on-the-fly**! This is a new feature so please open an issue if you encounter any problems.\n\n## Linter in action!\n\n![linter-gcc screenshot](https://raw.githubusercontent.com/hebaishi/images/master/lintergcc_onthefly.gif)\n\n## File/Project-Specific settings\n\nAssuming you have the a file called ```sample.cpp``` open, linter-gcc performs the following actions:\n\n1. Looks for file called ```sample.cpp.gcc-flags.json``` in the same directory as your source file (file-specific settings)\n2. Looks for a file called ```.gcc-flags.json``` in every subdirectory from the current up to your project root (subdirectory/project-specific settings)\n3. If no ```.gcc-flags.json``` is found, the settings in your configuration page are used.\n\nThe package takes its settings from the first configuration file that is found.\n\nYou can specify your settings in ```.gcc-flags.json```, at any level (file/subdirectory/project) using the following syntax:\n\n```json\n{\n  \"execPath\": \"/usr/bin/g++\",\n  \"gccDefaultCFlags\": \"-Wall\",\n  \"gccDefaultCppFlags\": \"-Wall -std=c++11\",\n  \"gccErrorLimit\": 15,\n  \"gccIncludePaths\": \".,./include,./path\",\n  \"gccSuppressWarnings\": true\n}\n```\n\nNote that the include paths need to be separated by commas. If this file is present, it will replace the settings you specified in the settings window. Relative paths (starting with ```.``` or ```..```) are expanded with respect to the root folder. Both ```execPath``` and ```gccIncludePaths``` are expanded.\n\nIn order to avoid unwanted behavior associated with having multiple projects open, only the paths within the first project are used, and the package limits its search to 30 levels when looking for a configuration file. You can work with multiple projects, as long as each is open in a separate window. Additionally, within each project, you may have as many file/directory-specific configuration files as you wish.\n\n### Usage notes:\n* Add ```-fsyntax-only``` to your C/C++ compilation flags to prevent the generation of ```.gch``` files when linting headers\n* Add ```-c``` to your flags to avoid linking errors.\n\n### Plugin installation\nPress ctrl and ',' or cmd and ',' , click on 'Packages', search 'linter gcc', or:\n```\n$ apm install linter-gcc\n```\n### Reporting Issues\n\nPlease read the [Wiki](https://github.com/hebaishi/linter-gcc/wiki/) before reporting any issues.\n",
+  "readme": "# linter-gcc\n[![Travis](https://img.shields.io/travis/hebaishi/linter-gcc.svg?style=flat-square)](https://travis-ci.org/hebaishi/linter-gcc) [![apm](https://img.shields.io/apm/dm/linter-gcc.svg?style=flat-square)](https://atom.io/packages/linter-gcc)\n[![Paypal](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44GUEE2BT7XVG)\n\nLinter plugin for [Linter](https://github.com/AtomLinter/Linter), provides an interface to gcc/g++.\n\nUsed with files with grammar \"C\", \"C++\" and [\"C++14\"](https://atom.io/packages/language-cpp14).\n\nNow with linting **on-the-fly**! This is a new feature so please open an issue if you encounter any problems.\n\n## Important info for Mac OSX users!\nIf you have XCode installed on OSX, the `gcc/g++` commands will both link to `clang`. This can cause issues with the `-fmax-errors` option used by linter-gcc, which isn't recognised by clang. To properly install GCC, you need to install it with Homebrew (instructions [here](https://github.com/hebaishi/linter-gcc/issues/62)).\n\n## Linter in action!\n\n![linter-gcc screenshot](https://raw.githubusercontent.com/hebaishi/images/master/lintergcc_onthefly.gif)\n\n## File/Project-Specific settings\n\nAssuming you have the a file called ```sample.cpp``` open, linter-gcc performs the following actions:\n\n1. Looks for file called ```sample.cpp.gcc-flags.json``` in the same directory as your source file (file-specific settings)\n2. Looks for a file called ```.gcc-flags.json``` in every subdirectory from the current up to your project root (subdirectory/project-specific settings)\n3. If no ```.gcc-flags.json``` is found, the settings in your configuration page are used.\n\nThe package takes its settings from the first configuration file that is found.\n\nYou can specify your settings in ```.gcc-flags.json```, at any level (file/subdirectory/project) using the following syntax:\n\n```json\n{\n  \"execPath\": \"/usr/bin/g++\",\n  \"gccDefaultCFlags\": \"-Wall\",\n  \"gccDefaultCppFlags\": \"-Wall -std=c++11\",\n  \"gccErrorLimit\": 15,\n  \"gccIncludePaths\": \".,./include,./path\",\n  \"gccSuppressWarnings\": true\n}\n```\n\nNote that the include paths need to be separated by commas. If this file is present, it will replace the settings you specified in the settings window. Relative paths (starting with ```.``` or ```..```) are expanded with respect to the root folder. Both ```execPath``` and ```gccIncludePaths``` are expanded.\n\nIn order to avoid unwanted behavior associated with having multiple projects open, only the paths within the first project are used, and the package limits its search to 30 levels when looking for a configuration file. You can work with multiple projects, as long as each is open in a separate window. Additionally, within each project, you may have as many file/directory-specific configuration files as you wish.\n\n### Usage notes:\n* Add ```-fsyntax-only``` to your C/C++ compilation flags to prevent the generation of ```.gch``` files when linting headers\n* Add ```-c``` to your flags to avoid linking errors.\n\n### Plugin installation\nPress ctrl and ',' or cmd and ',' , click on 'Packages', search 'linter gcc', or:\n```\n$ apm install linter-gcc\n```\n### Reporting Issues\n\nPlease read the [Wiki](https://github.com/hebaishi/linter-gcc/wiki/) before reporting any issues.\n",
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/hebaishi/linter-gcc/issues"
   },
   "homepage": "https://github.com/hebaishi/linter-gcc#readme",
-  "_id": "linter-gcc@0.6.9",
-  "_shasum": "f6bb08a9bca4a3e19232eae2dcbf349ffaafc2ec",
-  "_resolved": "file:../d-11635-2686-13eif0s/package.tgz",
-  "_from": "../d-11635-2686-13eif0s/package.tgz",
+  "_id": "linter-gcc@0.6.15",
+  "_shasum": "bfe739708160a9d79b558768248060496c8183f5",
+  "_resolved": "file:../d-11679-18129-1pohg6i/package.tgz",
+  "_from": "../d-11679-18129-1pohg6i/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
       {
         "name": "atom-linter",
-        "version": "4.6.1",
+        "version": "4.7.0",
         "path": "node_modules/atom-linter/lib/index.js"
-      },
-      {
-        "name": "consistent-env",
-        "version": "1.1.2",
-        "path": "node_modules/atom-linter/node_modules/consistent-env/lib/index.js"
       },
       {
         "name": "named-js-regexp",
         "version": "1.3.1",
         "path": "node_modules/atom-linter/node_modules/named-js-regexp/lib/named-js-regexp.js"
+      },
+      {
+        "name": "sb-exec",
+        "version": "1.0.5",
+        "path": "node_modules/atom-linter/node_modules/sb-exec/lib/index.js"
+      },
+      {
+        "name": "consistent-env",
+        "version": "1.2.0",
+        "path": "node_modules/atom-linter/node_modules/sb-exec/node_modules/consistent-env/lib/index.js"
+      },
+      {
+        "name": "extify",
+        "version": "1.0.0",
+        "path": "node_modules/atom-linter/node_modules/sb-exec/node_modules/extify/lib/index.js"
+      },
+      {
+        "name": "sb-npm-path",
+        "version": "1.0.1",
+        "path": "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/lib/index.js"
+      },
+      {
+        "name": "sb-memoize",
+        "version": "1.0.2",
+        "path": "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/node_modules/sb-memoize/lib/index.js"
       },
       {
         "name": "sb-promisify",
@@ -116,18 +136,18 @@
       },
       {
         "name": "graceful-fs",
-        "version": "4.1.3",
+        "version": "4.1.5",
         "path": "node_modules/fs-extra/node_modules/graceful-fs/graceful-fs.js"
       },
       {
         "name": "jsonfile",
-        "version": "2.2.3",
+        "version": "2.3.1",
         "path": "node_modules/fs-extra/node_modules/jsonfile/index.js"
       },
       {
         "name": "klaw",
-        "version": "1.1.3",
-        "path": "node_modules/fs-extra/node_modules/klaw/index.js"
+        "version": "1.3.0",
+        "path": "node_modules/fs-extra/node_modules/klaw/src/index.js"
       },
       {
         "name": "path-is-absolute",
@@ -136,22 +156,27 @@
       },
       {
         "name": "rimraf",
-        "version": "2.5.2",
+        "version": "2.5.4",
         "path": "node_modules/fs-extra/node_modules/rimraf/rimraf.js"
       },
       {
         "name": "glob",
-        "version": "7.0.3",
+        "version": "7.0.5",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/glob.js"
       },
       {
+        "name": "fs.realpath",
+        "version": "1.0.0",
+        "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/fs.realpath/index.js"
+      },
+      {
         "name": "inflight",
-        "version": "1.0.4",
+        "version": "1.0.5",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/inflight.js"
       },
       {
         "name": "wrappy",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/node_modules/wrappy/wrappy.js"
       },
       {
@@ -161,17 +186,17 @@
       },
       {
         "name": "minimatch",
-        "version": "3.0.0",
+        "version": "3.0.3",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/minimatch.js"
       },
       {
         "name": "brace-expansion",
-        "version": "1.1.3",
+        "version": "1.1.6",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/index.js"
       },
       {
         "name": "balanced-match",
-        "version": "0.3.0",
+        "version": "0.4.2",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js"
       },
       {
@@ -186,7 +211,7 @@
       },
       {
         "name": "wrappy",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "path": "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/once/node_modules/wrappy/wrappy.js"
       },
       {
@@ -216,7 +241,7 @@
       },
       {
         "name": "uuid",
-        "version": "2.0.1",
+        "version": "2.0.2",
         "path": "node_modules/tempfile/node_modules/uuid/uuid.js"
       }
     ],
@@ -228,9 +253,17 @@
         "node_modules/atom-linter/lib/helpers.js",
         "node_modules/atom-linter/lib/index.js",
         "node_modules/atom-linter/lib/types.js",
-        "node_modules/atom-linter/node_modules/consistent-env/lib/helpers.js",
-        "node_modules/atom-linter/node_modules/consistent-env/lib/index.js",
         "node_modules/atom-linter/node_modules/named-js-regexp/lib/named-js-regexp.js",
+        "node_modules/atom-linter/node_modules/sb-exec/lib/helpers.js",
+        "node_modules/atom-linter/node_modules/sb-exec/lib/index.js",
+        "node_modules/atom-linter/node_modules/sb-exec/lib/types.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/consistent-env/lib/helpers.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/consistent-env/lib/index.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/extify/lib/helpers.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/extify/lib/index.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/lib/helpers.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/lib/index.js",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/node_modules/sb-memoize/lib/index.js",
         "node_modules/atom-linter/node_modules/sb-promisify/lib/index.js",
         "node_modules/atom-linter/node_modules/tmp/Gruntfile.js",
         "node_modules/atom-linter/node_modules/tmp/lib/tmp.js",
@@ -272,22 +305,21 @@
         "node_modules/fs-extra/node_modules/graceful-fs/legacy-streams.js",
         "node_modules/fs-extra/node_modules/graceful-fs/polyfills.js",
         "node_modules/fs-extra/node_modules/jsonfile/index.js",
-        "node_modules/fs-extra/node_modules/klaw/assign.js",
-        "node_modules/fs-extra/node_modules/klaw/index.js",
+        "node_modules/fs-extra/node_modules/klaw/src/assign.js",
+        "node_modules/fs-extra/node_modules/klaw/src/index.js",
         "node_modules/fs-extra/node_modules/path-is-absolute/index.js",
         "node_modules/fs-extra/node_modules/rimraf/bin.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/common.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/glob.js",
+        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/fs.realpath/index.js",
+        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/fs.realpath/old.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/inflight.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/node_modules/wrappy/wrappy.js",
-        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/test.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inherits/inherits.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inherits/inherits_browser.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inherits/test.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/minimatch.js",
-        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/example.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/index.js",
-        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/example.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/example/map.js",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/index.js",
@@ -337,8 +369,16 @@
         "node_modules/tempfile/node_modules/uuid/uuid.js"
       ],
       ".json": [
-        "node_modules/atom-linter/node_modules/consistent-env/package.json",
         "node_modules/atom-linter/node_modules/named-js-regexp/package.json",
+        "node_modules/atom-linter/node_modules/sb-exec/.eslintrc.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/consistent-env/package.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/extify/.eslintrc.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/extify/package.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/.eslintrc.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/node_modules/sb-memoize/.eslintrc.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/node_modules/sb-memoize/package.json",
+        "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/package.json",
+        "node_modules/atom-linter/node_modules/sb-exec/package.json",
         "node_modules/atom-linter/node_modules/sb-promisify/package.json",
         "node_modules/atom-linter/node_modules/tmp/node_modules/os-tmpdir/package.json",
         "node_modules/atom-linter/node_modules/tmp/package.json",
@@ -348,6 +388,7 @@
         "node_modules/fs-extra/node_modules/jsonfile/package.json",
         "node_modules/fs-extra/node_modules/klaw/package.json",
         "node_modules/fs-extra/node_modules/path-is-absolute/package.json",
+        "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/fs.realpath/package.json",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/node_modules/wrappy/package.json",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inflight/package.json",
         "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/inherits/package.json",
@@ -397,10 +438,32 @@
           "node_modules/atom-linter"
         ],
         "dependencies": {
-          "consistent-env": "^1.0.1",
           "named-js-regexp": "^1.3.1",
+          "sb-exec": "^1.0.4",
           "sb-promisify": "^1.0.0",
           "tmp": "~0.0.28"
+        }
+      },
+      {
+        "paths": [
+          "node_modules/atom-linter/node_modules/sb-exec",
+          "node_modules/atom-linter/node_modules/sb-exec/lib"
+        ],
+        "dependencies": {
+          "consistent-env": "^1.0.1",
+          "extify": "^1.0.0",
+          "sb-npm-path": "^1.0.0"
+        }
+      },
+      {
+        "paths": [
+          "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path",
+          "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/lib",
+          "node_modules/atom-linter/node_modules/sb-exec/node_modules/sb-npm-path/spec"
+        ],
+        "dependencies": {
+          "sb-memoize": "^1.0.1",
+          "sb-promisify": "^1.2.0"
         }
       },
       {
@@ -444,7 +507,7 @@
           "node_modules/fs-extra/node_modules/rimraf"
         ],
         "dependencies": {
-          "glob": "^7.0.0"
+          "glob": "^7.0.5"
         }
       },
       {
@@ -452,9 +515,10 @@
           "node_modules/fs-extra/node_modules/rimraf/node_modules/glob"
         ],
         "dependencies": {
+          "fs.realpath": "^1.0.0",
           "inflight": "^1.0.4",
           "inherits": "2",
-          "minimatch": "2 || 3",
+          "minimatch": "^3.0.2",
           "once": "^1.3.0",
           "path-is-absolute": "^1.0.0"
         }
@@ -481,7 +545,7 @@
           "node_modules/fs-extra/node_modules/rimraf/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion"
         ],
         "dependencies": {
-          "balanced-match": "^0.3.0",
+          "balanced-match": "^0.4.1",
           "concat-map": "0.0.1"
         }
       },

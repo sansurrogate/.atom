@@ -1,0 +1,69 @@
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.enableHoverEvents = enableHoverEvents;
+exports.disableHoverEvents = disableHoverEvents;
+exports.isHoverEventsEnabled = isHoverEventsEnabled;
+exports.disableHoverEventsDuringMouseDown = disableHoverEventsDuringMouseDown;
+exports.disableHoverEventsUntilBlur = disableHoverEventsUntilBlur;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _atom = require('atom');
+
+var _mainJs = require('./main.js');
+
+var _autohideTreeViewJs = require('./autohide-tree-view.js');
+
+var _configJs = require('./config.js');
+
+var _configJs2 = _interopRequireDefault(_configJs);
+
+var _utilsJs = require('./utils.js');
+
+'use babel';
+
+var disposables;
+
+function enableHoverEvents() {
+  if (disposables) return;
+  disposables = new _atom.CompositeDisposable((0, _utilsJs.domListener)(_autohideTreeViewJs.eventTriggerArea, 'mouseenter', function () {
+    return (0, _autohideTreeViewJs.showTreeView)(_configJs2['default'].showDelay, false);
+  }), (0, _utilsJs.domListener)(_mainJs.treeViewEl, 'mouseleave', function () {
+    return (0, _autohideTreeViewJs.hideTreeView)(_configJs2['default'].hideDelay);
+  }), (0, _utilsJs.domListener)(_mainJs.treeViewEl.querySelector('.tree-view-resize-handle'), 'mousedown', function (event) {
+    if (event.button == 0) disableHoverEventsDuringMouseDown();
+  }), (0, _utilsJs.domListener)(document.body, 'mousedown', function (event) {
+    if (event.button == 0) disableHoverEventsDuringMouseDown();
+  }, { delegationTarget: 'atom-text-editor' }));
+}
+
+function disableHoverEvents() {
+  if (!disposables) return;
+  disposables.dispose();
+  disposables = null;
+}
+
+function isHoverEventsEnabled() {
+  return !!disposables;
+}
+
+function disableHoverEventsDuringMouseDown() {
+  if (!disposables) return;
+  disableHoverEvents();
+  (0, _utilsJs.domListener)(document.body, 'mouseup', function () {
+    enableHoverEvents();
+  }, { once: true });
+}
+
+function disableHoverEventsUntilBlur() {
+  if (!disposables) return;
+  disableHoverEvents();
+  (0, _utilsJs.domListener)(_mainJs.treeView.list[0], 'blur', function () {
+    (0, _autohideTreeViewJs.clearFocusedElement)();
+    enableHoverEvents();
+    (0, _autohideTreeViewJs.hideTreeView)();
+  }, { once: true });
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3Rha2Fha2kvLmF0b20vcGFja2FnZXMvYXV0b2hpZGUtdHJlZS12aWV3L2xpYi9ob3Zlci1ldmVudHMuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7b0JBQ2tDLE1BQU07O3NCQUNMLFdBQVc7O2tDQUVsQix5QkFBeUI7O3dCQUNsQyxhQUFhOzs7O3VCQUNOLFlBQVk7O0FBTnRDLFdBQVcsQ0FBQzs7QUFRWixJQUFJLFdBQVcsQ0FBQzs7QUFFVCxTQUFTLGlCQUFpQixHQUFHO0FBQ2xDLE1BQUcsV0FBVyxFQUFFLE9BQU87QUFDdkIsYUFBVyxHQUFHLDhCQUNaLGdFQUE4QixZQUFZLEVBQUU7V0FDMUMsc0NBQWEsc0JBQU8sU0FBUyxFQUFFLEtBQUssQ0FBQztHQUFBLENBQ3RDLEVBRUQsOENBQXdCLFlBQVksRUFBRTtXQUNwQyxzQ0FBYSxzQkFBTyxTQUFTLENBQUM7R0FBQSxDQUMvQixFQUVELDBCQUFZLG1CQUFXLGFBQWEsQ0FBQywwQkFBMEIsQ0FBQyxFQUFFLFdBQVcsRUFBRSxVQUFBLEtBQUssRUFBSTtBQUN0RixRQUFHLEtBQUssQ0FBQyxNQUFNLElBQUksQ0FBQyxFQUFFLGlDQUFpQyxFQUFFLENBQUM7R0FDM0QsQ0FBQyxFQUVGLDBCQUFZLFFBQVEsQ0FBQyxJQUFJLEVBQUUsV0FBVyxFQUFFLFVBQUEsS0FBSyxFQUFJO0FBQy9DLFFBQUcsS0FBSyxDQUFDLE1BQU0sSUFBSSxDQUFDLEVBQUUsaUNBQWlDLEVBQUUsQ0FBQztHQUMzRCxFQUFFLEVBQUMsZ0JBQWdCLEVBQUUsa0JBQWtCLEVBQUMsQ0FBQyxDQUMzQyxDQUFDO0NBQ0g7O0FBRU0sU0FBUyxrQkFBa0IsR0FBRztBQUNuQyxNQUFHLENBQUMsV0FBVyxFQUFFLE9BQU87QUFDeEIsYUFBVyxDQUFDLE9BQU8sRUFBRSxDQUFDO0FBQ3RCLGFBQVcsR0FBRyxJQUFJLENBQUM7Q0FDcEI7O0FBRU0sU0FBUyxvQkFBb0IsR0FBRztBQUNyQyxTQUFPLENBQUMsQ0FBQyxXQUFXLENBQUM7Q0FDdEI7O0FBRU0sU0FBUyxpQ0FBaUMsR0FBRztBQUNsRCxNQUFHLENBQUMsV0FBVyxFQUFFLE9BQU87QUFDeEIsb0JBQWtCLEVBQUUsQ0FBQztBQUNyQiw0QkFBWSxRQUFRLENBQUMsSUFBSSxFQUFFLFNBQVMsRUFBRSxZQUFNO0FBQzFDLHFCQUFpQixFQUFFLENBQUM7R0FDckIsRUFBRSxFQUFDLElBQUksRUFBRSxJQUFJLEVBQUMsQ0FBQyxDQUFDO0NBQ2xCOztBQUVNLFNBQVMsMkJBQTJCLEdBQUc7QUFDNUMsTUFBRyxDQUFDLFdBQVcsRUFBRSxPQUFPO0FBQ3hCLG9CQUFrQixFQUFFLENBQUM7QUFDckIsNEJBQVksaUJBQVMsSUFBSSxDQUFDLENBQUMsQ0FBQyxFQUFFLE1BQU0sRUFBRSxZQUFNO0FBQzFDLGtEQUFxQixDQUFDO0FBQ3RCLHFCQUFpQixFQUFFLENBQUM7QUFDcEIsMkNBQWMsQ0FBQztHQUNoQixFQUFFLEVBQUMsSUFBSSxFQUFFLElBQUksRUFBQyxDQUFDLENBQUM7Q0FDbEIiLCJmaWxlIjoiL2hvbWUvdGFrYWFraS8uYXRvbS9wYWNrYWdlcy9hdXRvaGlkZS10cmVlLXZpZXcvbGliL2hvdmVyLWV2ZW50cy5qcyIsInNvdXJjZXNDb250ZW50IjpbIid1c2UgYmFiZWwnO1xuaW1wb3J0IHtDb21wb3NpdGVEaXNwb3NhYmxlfSBmcm9tICdhdG9tJztcbmltcG9ydCB7dHJlZVZpZXcsIHRyZWVWaWV3RWx9IGZyb20gJy4vbWFpbi5qcyc7XG5pbXBvcnQge3Nob3dUcmVlVmlldywgaGlkZVRyZWVWaWV3LCBldmVudFRyaWdnZXJBcmVhLFxuICBjbGVhckZvY3VzZWRFbGVtZW50fSBmcm9tICcuL2F1dG9oaWRlLXRyZWUtdmlldy5qcyc7XG5pbXBvcnQgY29uZmlnIGZyb20gJy4vY29uZmlnLmpzJztcbmltcG9ydCB7ZG9tTGlzdGVuZXJ9IGZyb20gJy4vdXRpbHMuanMnO1xuXG52YXIgZGlzcG9zYWJsZXM7XG5cbmV4cG9ydCBmdW5jdGlvbiBlbmFibGVIb3ZlckV2ZW50cygpIHtcbiAgaWYoZGlzcG9zYWJsZXMpIHJldHVybjtcbiAgZGlzcG9zYWJsZXMgPSBuZXcgQ29tcG9zaXRlRGlzcG9zYWJsZShcbiAgICBkb21MaXN0ZW5lcihldmVudFRyaWdnZXJBcmVhLCAnbW91c2VlbnRlcicsICgpID0+XG4gICAgICBzaG93VHJlZVZpZXcoY29uZmlnLnNob3dEZWxheSwgZmFsc2UpXG4gICAgKSxcblxuICAgIGRvbUxpc3RlbmVyKHRyZWVWaWV3RWwsICdtb3VzZWxlYXZlJywgKCkgPT5cbiAgICAgIGhpZGVUcmVlVmlldyhjb25maWcuaGlkZURlbGF5KVxuICAgICksXG5cbiAgICBkb21MaXN0ZW5lcih0cmVlVmlld0VsLnF1ZXJ5U2VsZWN0b3IoJy50cmVlLXZpZXctcmVzaXplLWhhbmRsZScpLCAnbW91c2Vkb3duJywgZXZlbnQgPT4ge1xuICAgICAgaWYoZXZlbnQuYnV0dG9uID09IDApIGRpc2FibGVIb3ZlckV2ZW50c0R1cmluZ01vdXNlRG93bigpO1xuICAgIH0pLFxuXG4gICAgZG9tTGlzdGVuZXIoZG9jdW1lbnQuYm9keSwgJ21vdXNlZG93bicsIGV2ZW50ID0+IHtcbiAgICAgIGlmKGV2ZW50LmJ1dHRvbiA9PSAwKSBkaXNhYmxlSG92ZXJFdmVudHNEdXJpbmdNb3VzZURvd24oKTtcbiAgICB9LCB7ZGVsZWdhdGlvblRhcmdldDogJ2F0b20tdGV4dC1lZGl0b3InfSksXG4gICk7XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBkaXNhYmxlSG92ZXJFdmVudHMoKSB7XG4gIGlmKCFkaXNwb3NhYmxlcykgcmV0dXJuO1xuICBkaXNwb3NhYmxlcy5kaXNwb3NlKCk7XG4gIGRpc3Bvc2FibGVzID0gbnVsbDtcbn1cblxuZXhwb3J0IGZ1bmN0aW9uIGlzSG92ZXJFdmVudHNFbmFibGVkKCkge1xuICByZXR1cm4gISFkaXNwb3NhYmxlcztcbn1cblxuZXhwb3J0IGZ1bmN0aW9uIGRpc2FibGVIb3ZlckV2ZW50c0R1cmluZ01vdXNlRG93bigpIHtcbiAgaWYoIWRpc3Bvc2FibGVzKSByZXR1cm47XG4gIGRpc2FibGVIb3ZlckV2ZW50cygpO1xuICBkb21MaXN0ZW5lcihkb2N1bWVudC5ib2R5LCAnbW91c2V1cCcsICgpID0+IHtcbiAgICBlbmFibGVIb3ZlckV2ZW50cygpO1xuICB9LCB7b25jZTogdHJ1ZX0pO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gZGlzYWJsZUhvdmVyRXZlbnRzVW50aWxCbHVyKCkge1xuICBpZighZGlzcG9zYWJsZXMpIHJldHVybjtcbiAgZGlzYWJsZUhvdmVyRXZlbnRzKCk7XG4gIGRvbUxpc3RlbmVyKHRyZWVWaWV3Lmxpc3RbMF0sICdibHVyJywgKCkgPT4ge1xuICAgIGNsZWFyRm9jdXNlZEVsZW1lbnQoKTtcbiAgICBlbmFibGVIb3ZlckV2ZW50cygpO1xuICAgIGhpZGVUcmVlVmlldygpO1xuICB9LCB7b25jZTogdHJ1ZX0pO1xufVxuIl19
+//# sourceURL=/home/takaaki/.atom/packages/autohide-tree-view/lib/hover-events.js

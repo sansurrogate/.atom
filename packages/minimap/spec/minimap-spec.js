@@ -14,6 +14,7 @@ describe('Minimap', () => {
     atom.config.set('minimap.interline', 1)
 
     editor = atom.workspace.buildTextEditor({})
+    editor.autoHeight = false
 
     editorElement = atom.views.getView(editor)
     jasmine.attachToDOM(editorElement)
@@ -120,7 +121,7 @@ describe('Minimap', () => {
     it('adjust the scrolling ratio', () => {
       editorElement.setScrollTop(editorElement.getScrollHeight())
 
-      let maxScrollTop = editorElement.getScrollHeight() - editorElement.getHeight() - (editorElement.getHeight() - 3 * editor.displayBuffer.getLineHeightInPixels())
+      let maxScrollTop = editorElement.getScrollHeight() - editorElement.getHeight() - (editorElement.getHeight() - 3 * editor.getLineHeightInPixels())
 
       expect(minimap.getTextEditorScrollRatio()).toEqual(editorElement.getScrollTop() / maxScrollTop)
     })
@@ -486,6 +487,7 @@ describe('Stand alone minimap', () => {
     atom.config.set('minimap.interline', 1)
 
     editor = atom.workspace.buildTextEditor({})
+    editor.autoHeight = false
     editorElement = atom.views.getView(editor)
     jasmine.attachToDOM(editorElement)
     editorElement.setHeight(50)

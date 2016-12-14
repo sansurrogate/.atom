@@ -1,7 +1,7 @@
 {
   "name": "git-control",
   "main": "./lib/git-control",
-  "version": "0.7.1",
+  "version": "0.8.2",
   "description": "Provides a GUI interface to manage all commonly-used git commands.",
   "keywords": [
     "git-control",
@@ -32,10 +32,10 @@
     "url": "https://github.com/jacogr/atom-git-control/issues"
   },
   "homepage": "https://github.com/jacogr/atom-git-control#readme",
-  "_id": "git-control@0.7.1",
+  "_id": "git-control@0.8.2",
   "_shasum": "a97445475c58a35ba635d59f4682a4bf787c3e75",
-  "_resolved": "file:../d-116228-22698-1fkq1wf/package.tgz",
-  "_from": "../d-116228-22698-1fkq1wf/package.tgz",
+  "_resolved": "file:../d-11679-18105-14dzhtv/package.tgz",
+  "_from": "../d-11679-18105-14dzhtv/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
@@ -76,7 +76,7 @@
       },
       {
         "name": "es5-ext",
-        "version": "0.10.11",
+        "version": "0.10.12",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/es6-weak-map/node_modules/es5-ext/index.js"
       },
       {
@@ -86,7 +86,7 @@
       },
       {
         "name": "es6-symbol",
-        "version": "3.0.2",
+        "version": "3.1.0",
         "path": "node_modules/atom-space-pen-views/node_modules/space-pen/node_modules/grim/node_modules/emissary/node_modules/es6-weak-map/node_modules/es5-ext/node_modules/es6-symbol/index.js"
       },
       {
@@ -150,12 +150,16 @@
         "lib/dialogs/branch-dialog.coffee",
         "lib/dialogs/commit-dialog.coffee",
         "lib/dialogs/confirm-dialog.coffee",
+        "lib/dialogs/create-tag-dialog.coffee",
         "lib/dialogs/delete-dialog.coffee",
         "lib/dialogs/dialog.coffee",
         "lib/dialogs/flow-dialog.coffee",
         "lib/dialogs/merge-dialog.coffee",
+        "lib/dialogs/midrebase-dialog.coffee",
         "lib/dialogs/project-dialog.coffee",
         "lib/dialogs/push-dialog.coffee",
+        "lib/dialogs/push-tags-dialog.coffee",
+        "lib/dialogs/rebase-dialog.coffee",
         "lib/git-control-view.coffee",
         "lib/git-control.coffee",
         "lib/git.coffee",
@@ -769,6 +773,7 @@
           "lib",
           "lib/views",
           "",
+          "spec/dialogs",
           "spec"
         ],
         "dependencies": {
@@ -997,7 +1002,7 @@
         ],
         "dependencies": {
           "es6-iterator": "2",
-          "es6-symbol": "~3.0.2"
+          "es6-symbol": "~3.1"
         }
       },
       {
@@ -1020,7 +1025,7 @@
         ],
         "dependencies": {
           "d": "~0.1.1",
-          "es5-ext": "~0.10.10"
+          "es5-ext": "~0.10.11"
         }
       },
       {

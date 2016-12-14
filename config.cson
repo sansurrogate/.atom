@@ -1,11 +1,22 @@
 "*":
+  "autohide-tree-view":
+    minWidth: 10
+  build:
+    overrideThemeColors: false
+    statusBar: "Right"
+    statusBarPriority: 0
   core:
+    disabledPackages: [
+      "linter-matlab"
+    ]
     projectHome: "/home/takaaki/Workspace/Playground/Atom/"
+    telemetryConsent: "limited"
     themes: [
       "one-dark-ui"
       "sepia-plus-syntax"
     ]
   editor:
+    fontSize: 18
     invisibles: {}
     showIndentGuide: true
     showInvisibles: true
@@ -17,7 +28,12 @@
   linter:
     errorPanelHeight: 22
   "linter-gcc":
+    gccDefaultCppFlags: "-c -Wall -Wextra -std=c++14"
+    gccIncludePaths: "./*"
     gccLintOnTheFly: true
+  "linter-rust": {}
+  "markdown-preview":
+    useGitHubStyle: true
   "merge-conflicts":
     gitPath: "git"
   minimap:
@@ -25,8 +41,9 @@
       "git-diff": true
       "git-diffDecorationsZIndex": 0
       linter: true
-      linterDecorationsZIndex: 0
-    scrollAnimation: true
+      linterDecorationsZIndex: 1
+      "minimap-autohide": true
+      "minimap-autohideDecorationsZIndex": 0
   "minimap-linter": {}
   "one-dark-ui": {}
   "one-light-ui": {}
